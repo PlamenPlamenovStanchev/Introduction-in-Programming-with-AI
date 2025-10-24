@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bathroom Tile Calculator</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/form.css">
+    <link rel="stylesheet" href="styles/visualization.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> Bathroom Tile Calculator</h1>
+            <p>Calculate tile requirements and visualize your bathroom layout</p>
+        </header>
+
+        <main>
+            <div class="calculator-grid">
+                <!-- Input Form Section -->
+                <section class="input-section">
+                    <form id="tileCalculatorForm">
+                        <div class="form-group">
+                            <h2><i class="fas fa-vector-square"></i> Floor Dimensions</h2>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="floorWidth">Width (mm)</label>
+                                    <input type="number" id="floorWidth" required min="500" max="10000">
+                                </div>
+                                <div class="input-group">
+                                    <label for="floorLength">Length (mm)</label>
+                                    <input type="number" id="floorLength" required min="500" max="10000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h2><i class="fas fa-th"></i> Floor Tile Size</h2>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="floorTileWidth">Width (mm)</label>
+                                    <input type="number" id="floorTileWidth" required min="100" max="1000">
+                                </div>
+                                <div class="input-group">
+                                    <label for="floorTileLength">Length (mm)</label>
+                                    <input type="number" id="floorTileLength" required min="100" max="1000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h2><i class="fas fa-ruler-vertical"></i> Wall Dimensions</h2>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="wallHeight">Height (mm)</label>
+                                    <input type="number" id="wallHeight" required min="1000" max="5000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h2><i class="fas fa-th-large"></i> Wall Tile Size</h2>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="wallTileWidth">Width (mm)</label>
+                                    <input type="number" id="wallTileWidth" required min="100" max="1000">
+                                </div>
+                                <div class="input-group">
+                                    <label for="wallTileHeight">Height (mm)</label>
+                                    <input type="number" id="wallTileHeight" required min="100" max="1000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h2><i class="fas fa-door-open"></i> Door Size</h2>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="doorWidth">Width (mm)</label>
+                                    <input type="number" id="doorWidth" required min="600" max="1500">
+                                </div>
+                                <div class="input-group">
+                                    <label for="doorHeight">Height (mm)</label>
+                                    <input type="number" id="doorHeight" required min="1800" max="2400">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="calculate-btn">
+                            <i class="fas fa-calculator"></i> Calculate Tiles
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Results Section -->
+                <section class="results-section" id="results">
+                    <div class="results-container">
+                        <h2><i class="fas fa-clipboard-list"></i> Results</h2>
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <h3>Floor Tiles</h3>
+                                <p id="floorTilesCount">-</p>
+                                <small>Including 10% waste allowance</small>
+                            </div>
+                            <div class="result-item">
+                                <h3>Wall Tiles</h3>
+                                <p id="wallTilesCount">-</p>
+                                <small>Including 10% waste allowance</small>
+                            </div>
+                            <div class="result-item">
+                                <h3>Total Area</h3>
+                                <p id="totalArea">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualization Section -->
+                    <div class="visualization-container">
+                        <h2><i class="fas fa-paint-roller"></i> Layout Visualization</h2>
+                        <div class="visualization">
+                            <div class="room-layout">
+                                <canvas id="floorCanvas"></canvas>
+                                <div class="walls-container">
+                                    <canvas id="wallCanvas1" class="wall-canvas"></canvas>
+                                    <canvas id="wallCanvas2" class="wall-canvas"></canvas>
+                                    <canvas id="wallCanvas3" class="wall-canvas"></canvas>
+                                    <canvas id="wallCanvas4" class="wall-canvas"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2025 Bathroom Tile Calculator. All measurements in millimeters.</p>
+        </footer>
+    </div>
+
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/calculator.js"></script>
+    <script src="scripts/visualization.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
