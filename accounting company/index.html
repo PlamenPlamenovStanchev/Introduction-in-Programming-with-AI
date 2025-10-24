@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccounTrust - Professional Accounting Services</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">AccounTrust</div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home">
+        <div class="hero">
+            <h1>Professional Accounting Services</h1>
+            <p>Your trusted partner in financial success</p>
+            <a href="#contact" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-calculator"></i>
+                <h3>Bookkeeping</h3>
+                <p>Comprehensive bookkeeping services to keep your finances organized</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-file-invoice"></i>
+                <h3>Tax Planning</h3>
+                <p>Strategic tax planning and preparation services</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Financial Analysis</h3>
+                <p>Detailed financial analysis and reporting</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-coins"></i>
+                <h3>Payroll Services</h3>
+                <p>Complete payroll management solutions</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <h2>Our Pricing</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Basic</h3>
+                <div class="price">$299<span>/month</span></div>
+                <ul>
+                    <li>Basic Bookkeeping</li>
+                    <li>Monthly Financial Statements</li>
+                    <li>Basic Tax Planning</li>
+                    <li>Email Support</li>
+                </ul>
+                <a href="#contact" class="pricing-button">Choose Plan</a>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Professional</h3>
+                <div class="price">$499<span>/month</span></div>
+                <ul>
+                    <li>Advanced Bookkeeping</li>
+                    <li>Monthly Financial Statements</li>
+                    <li>Tax Planning & Preparation</li>
+                    <li>Priority Support</li>
+                    <li>Payroll Services</li>
+                </ul>
+                <a href="#contact" class="pricing-button">Choose Plan</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">$899<span>/month</span></div>
+                <ul>
+                    <li>Complete Bookkeeping</li>
+                    <li>Custom Financial Reports</li>
+                    <li>Strategic Tax Planning</li>
+                    <li>24/7 Priority Support</li>
+                    <li>Payroll & HR Services</li>
+                    <li>Financial Consulting</li>
+                </ul>
+                <a href="#contact" class="pricing-button">Choose Plan</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>123 Business Avenue, Suite 200<br>New York, NY 10001</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <p>contact@accountrust.com</p>
+                </div>
+            </div>
+            <form id="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <input type="tel" placeholder="Phone Number">
+                <select required>
+                    <option value="" disabled selected>Select Service</option>
+                    <option value="bookkeeping">Bookkeeping</option>
+                    <option value="tax">Tax Planning</option>
+                    <option value="analysis">Financial Analysis</option>
+                    <option value="payroll">Payroll Services</option>
+                </select>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>AccounTrust</h4>
+                <p>Your trusted partner in financial success. Professional accounting services for businesses of all sizes.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 AccounTrust. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
