@@ -1,0 +1,281 @@
+/* Galactic Theme and Base Styles */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #00ff9d;
+    --secondary-color: #6e00ff;
+    --background-dark: #0a0a2e;
+    --text-color: #fff;
+    --pod-bg: rgba(16, 16, 59, 0.95);
+    --input-bg: rgba(255, 255, 255, 0.1);
+    --glow-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: var(--background-dark);
+    color: var(--text-color);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Stars Animation */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 60% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 100px 100px;
+    animation: starsAnimation 60s linear infinite;
+}
+
+@keyframes starsAnimation {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Calculator Pod Styles */
+.calculator-pod {
+    background: var(--pod-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    box-shadow: var(--glow-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.calculator-pod::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* Header Styles */
+.pod-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.pod-header i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+/* Form Styles */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+label i {
+    margin-right: 0.5rem;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 0.8rem;
+    background: var(--input-bg);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: var(--text-color);
+    font-family: 'Orbitron', sans-serif;
+    transition: all 0.3s ease;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+}
+
+/* Gender Selection Styles */
+.gender-select {
+    display: flex;
+    gap: 1rem;
+}
+
+.gender-option {
+    flex: 1;
+}
+
+.gender-option input[type="radio"] {
+    display: none;
+}
+
+.gender-button {
+    display: block;
+    padding: 0.8rem;
+    text-align: center;
+    background: var(--input-bg);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gender-button i {
+    margin-right: 0.5rem;
+}
+
+.gender-option input[type="radio"]:checked + .gender-button {
+    border-color: var(--primary-color);
+    background: rgba(0, 255, 157, 0.1);
+}
+
+/* Calculate Button */
+.calculate-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: 10px;
+    color: var(--background-dark);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.calculate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-shadow);
+}
+
+.calculate-btn i {
+    margin-right: 0.5rem;
+}
+
+/* Result Styles */
+#result {
+    margin-top: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+#result.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.result-pod {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.bmi-display {
+    margin: 2rem 0;
+}
+
+.bmi-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.bmi-category {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* BMI Scale */
+.bmi-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding: 0 1rem;
+}
+
+.scale-marker {
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.marker {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 auto 0.5rem;
+}
+
+.underweight .marker { background: #ff6b6b; }
+.normal .marker { background: #51cf66; }
+.overweight .marker { background: #ffd43b; }
+.obese .marker { background: #ff922b; }
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .calculator-pod {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .bmi-scale {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .scale-marker {
+        width: 45%;
+    }
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic BMI Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="container">
+        <div class="calculator-pod">
+            <div class="pod-header">
+                <i class="fas fa-user-astronaut"></i>
+                <h1>Galactic BMI Calculator</h1>
+                <p class="subtitle">Earth Standards Assessment Module</p>
+            </div>
+            
+            <form id="bmi-form" onsubmit="calculateBMI(event)">
+                <div class="input-group">
+                    <label for="age">
+                        <i class="fas fa-clock"></i>
+                        Earth Age
+                    </label>
+                    <input type="number" id="age" required min="0" max="150">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <i class="fas fa-venus-mars"></i>
+                        Gender
+                    </label>
+                    <div class="gender-select">
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="male" required>
+                            <span class="gender-button">
+                                <i class="fas fa-mars"></i>
+                                Male
+                            </span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="female">
+                            <span class="gender-button">
+                                <i class="fas fa-venus"></i>
+                                Female
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="height">
+                        <i class="fas fa-ruler-vertical"></i>
+                        Height (cm)
+                    </label>
+                    <input type="number" id="height" required min="1" max="300">
+                </div>
+
+                <div class="input-group">
+                    <label for="weight">
+                        <i class="fas fa-weight"></i>
+                        Weight (kg)
+                    </label>
+                    <input type="number" id="weight" required min="1" max="500">
+                </div>
+
+                <button type="submit" class="calculate-btn">
+                    <i class="fas fa-calculator"></i>
+                    Calculate BMI
+                </button>
+            </form>
+
+            <div id="result" class="result-hidden">
+                <div class="result-pod">
+                    <h2>Your BMI Analysis</h2>
+                    <div class="bmi-display">
+                        <div class="bmi-number">0.0</div>
+                        <div class="bmi-category">Category: Unknown</div>
+                    </div>
+                    <div class="bmi-scale">
+                        <div class="scale-marker underweight">
+                            <span class="marker"></span>
+                            Underweight
+                        </div>
+                        <div class="scale-marker normal">
+                            <span class="marker"></span>
+                            Normal
+                        </div>
+                        <div class="scale-marker overweight">
+                            <span class="marker"></span>
+                            Overweight
+                        </div>
+                        <div class="scale-marker obese">
+                            <span class="marker"></span>
+                            Obese
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
