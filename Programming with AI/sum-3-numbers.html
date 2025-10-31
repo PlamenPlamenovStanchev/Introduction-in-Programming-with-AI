@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sum 3 Numbers</title>
+  <link rel="stylesheet" href="sum-3-numbers.css">
+</head>
+<body>
+  <main class="card">
+    <h1>Sum 3 Numbers</h1>
+    <p>Enter three numbers and calculate their sum using the provided <code>sumNumbers(a, b, c)</code> function.</p>
+
+    <form id="sumForm">
+      <div class="row">
+        <label for="a">A</label>
+        <input id="a" name="a" type="number" required value="5">
+      </div>
+      <div class="row">
+        <label for="b">B</label>
+        <input id="b" name="b" type="number" required value="2">
+      </div>
+      <div class="row">
+        <label for="c">C</label>
+        <input id="c" name="c" type="number" required value="3">
+      </div>
+
+      <button type="submit" class="btn">Calculate</button>
+    </form>
+
+    <div id="result" class="result">Result: <span id="sumValue">-</span></div>
+  </main>
+
+  <!-- include the existing JS function file -->
+  <script src="Sum-3-Numbers.js"></script>
+  <script>
+    // form handling: read values, call existing function, show result
+    document.getElementById('sumForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const a = Number(document.getElementById('a').value);
+      const b = Number(document.getElementById('b').value);
+      const c = Number(document.getElementById('c').value);
+
+      // call function defined in Sum-3-Numbers.js
+      const sum = sumNumbers(a, b, c);
+      document.getElementById('sumValue').textContent = sum;
+    });
+  </script>
+</body>
+</html>

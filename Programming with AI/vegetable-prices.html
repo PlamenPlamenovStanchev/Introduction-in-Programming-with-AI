@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegetables Price Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #52c234 0%, #61b15a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #52c234;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .price-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .price-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .price-info .price {
+            color: #52c234;
+            font-weight: 600;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .vegetable-icon {
+            font-size: 32px;
+            margin-right: 15px;
+        }
+
+        .input-content {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #52c234;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #52c234 0%, #61b15a 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(82, 194, 52, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #52c23415 0%, #61b15a15 100%);
+            border-radius: 12px;
+            border-left: 4px solid #52c234;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-line {
+            font-size: 16px;
+            color: #333;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-line.total {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #52c234;
+            color: #52c234;
+        }
+
+        .result-line .label {
+            color: #666;
+        }
+
+        .result-line .value {
+            font-weight: 600;
+            color: #52c234;
+        }
+
+        .result-line.total .value {
+            font-size: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-line {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🥗 Vegetables Price Calculator</h1>
+        <p class="subtitle">Calculate prices with VAT included</p>
+
+        <div class="price-info">
+            <p>🍅 Tomatoes: <span class="price">2.40 EUR/kg</span> (without VAT)</p>
+            <p>🥒 Cucumbers: <span class="price">1.90 EUR/kg</span> (without VAT)</p>
+            <p>📊 VAT Rate: <span class="price">20%</span></p>
+        </div>
+        
+        <form id="vegetablesForm">
+            <div class="input-section">
+                <div class="input-group">
+                    <div class="vegetable-icon">🍅</div>
+                    <div class="input-content">
+                        <label for="tomatoes">Tomatoes (kg)</label>
+                        <input type="number" id="tomatoes" step="0.1" min="0" value="2" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="vegetable-icon">🥒</div>
+                    <div class="input-content">
+                        <label for="cucumbers">Cucumbers (kg)</label>
+                        <input type="number" id="cucumbers" step="0.1" min="0" value="3" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">Calculate Price</button>
+        </form>
+
+        <div class="result-section" id="result">
+            <div class="result-line">
+                <span class="label">Tomatoes:</span>
+                <span class="value" id="tomatoesPrice">0.00 EUR</span>
+            </div>
+            <div class="result-line">
+                <span class="label">Cucumbers:</span>
+                <span class="value" id="cucumbersPrice">0.00 EUR</span>
+            </div>
+            <div class="result-line">
+                <span class="label">Total:</span>
+                <span class="value" id="totalPrice">0.00 EUR</span>
+            </div>
+            <div class="result-line">
+                <span class="label">20% VAT:</span>
+                <span class="value" id="vatAmount">0.00 EUR</span>
+            </div>
+            <div class="result-line total">
+                <span class="label">Total price (with VAT):</span>
+                <span class="value" id="totalWithVAT">0.00 EUR</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function vegetablesPrice(tomatoesKg, cucumbersKg) {
+            // Fixed prices per kg (without VAT)
+            const tomatoPricePerKg = 2.4;
+            const cucumberPricePerKg = 1.9;
+            const vatRate = 0.20; // 20%
+            
+            // Calculate prices without VAT
+            const tomatoesTotal = tomatoesKg * tomatoPricePerKg;
+            const cucumbersTotal = cucumbersKg * cucumberPricePerKg;
+            const totalWithoutVAT = tomatoesTotal + cucumbersTotal;
+            
+            // Calculate VAT and total with VAT
+            const vatAmount = totalWithoutVAT * vatRate;
+            const totalWithVAT = totalWithoutVAT + vatAmount;
+            
+            // Return results as an object
+            return {
+                tomatoes: tomatoesTotal.toFixed(2),
+                cucumbers: cucumbersTotal.toFixed(2),
+                total: totalWithoutVAT.toFixed(2),
+                vat: vatAmount.toFixed(2),
+                totalWithVAT: totalWithVAT.toFixed(2)
+            };
+        }
+
+        // Handle form submission
+        document.getElementById('vegetablesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateAndDisplay();
+        });
+
+        // Real-time calculation on input change
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', calculateAndDisplay);
+        });
+
+        function calculateAndDisplay() {
+            const tomatoesKg = parseFloat(document.getElementById('tomatoes').value) || 0;
+            const cucumbersKg = parseFloat(document.getElementById('cucumbers').value) || 0;
+            
+            // Call the function
+            const result = vegetablesPrice(tomatoesKg, cucumbersKg);
+            
+            // Display the results
+            document.getElementById('tomatoesPrice').textContent = result.tomatoes + ' EUR';
+            document.getElementById('cucumbersPrice').textContent = result.cucumbers + ' EUR';
+            document.getElementById('totalPrice').textContent = result.total + ' EUR';
+            document.getElementById('vatAmount').textContent = result.vat + ' EUR';
+            document.getElementById('totalWithVAT').textContent = result.totalWithVAT + ' EUR';
+            
+            document.getElementById('result').classList.add('show');
+        }
+
+        // Calculate on page load with default values
+        calculateAndDisplay();
+    </script>
+</body>
+</html>

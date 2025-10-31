@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum 3 Times Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .time-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .output-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            display: none;
+            text-align: center;
+        }
+
+        .output-section.show {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-text {
+            font-size: 22px;
+            color: #333;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .result-text .time {
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-text .operator {
+            color: #764ba2;
+            margin: 0 8px;
+        }
+
+        .result-text .equals {
+            color: #28a745;
+            margin: 0 8px;
+            font-size: 24px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            .result-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏰ Sum 3 Times Calculator</h1>
+        
+        <form id="timeForm">
+            <div class="time-section">
+                <div class="section-title">First Time</div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="h1">Hours (0-23)</label>
+                        <input type="number" id="h1" name="h1" min="0" max="23" value="10" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="m1">Minutes (0-59)</label>
+                        <input type="number" id="m1" name="m1" min="0" max="59" value="30" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="time-section">
+                <div class="section-title">Second Time</div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="h2">Hours (0-23)</label>
+                        <input type="number" id="h2" name="h2" min="0" max="23" value="0" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="m2">Minutes (0-59)</label>
+                        <input type="number" id="m2" name="m2" min="0" max="59" value="5" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="time-section">
+                <div class="section-title">Third Time</div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="h3">Hours (0-23)</label>
+                        <input type="number" id="h3" name="h3" min="0" max="23" value="0" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="m3">Minutes (0-59)</label>
+                        <input type="number" id="m3" name="m3" min="0" max="59" value="2" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">Calculate Sum</button>
+        </form>
+
+        <div class="output-section" id="output">
+            <div class="result-text" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Function to sum three times in 24-hour format "hh:mm"
+        function sumThreeTimes(h1, m1, h2, m2, h3, m3) {
+            // Convert all three times to total minutes
+            let time1Minutes = h1 * 60 + m1;
+            let time2Minutes = h2 * 60 + m2;
+            let time3Minutes = h3 * 60 + m3;
+            
+            // Calculate result time in minutes (with wrap-around for 24-hour format)
+            let resultMinutes = (time1Minutes + time2Minutes + time3Minutes) % (24 * 60);
+            
+            // Convert back to hours and minutes
+            let resultHours = Math.floor(resultMinutes / 60);
+            let resultMins = resultMinutes % 60;
+            
+            // Format as hh:mm with leading zeros
+            const formatTime = (h, m) => {
+                return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+            };
+            
+            const firstTime = formatTime(h1, m1);
+            const secondTime = formatTime(h2, m2);
+            const thirdTime = formatTime(h3, m3);
+            const resultTime = formatTime(resultHours, resultMins);
+            
+            // Return formatted result
+            return `${firstTime} + ${secondTime} + ${thirdTime} = ${resultTime}`;
+        }
+
+        // Handle form submission
+        document.getElementById('timeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get input values
+            const h1 = parseInt(document.getElementById('h1').value);
+            const m1 = parseInt(document.getElementById('m1').value);
+            const h2 = parseInt(document.getElementById('h2').value);
+            const m2 = parseInt(document.getElementById('m2').value);
+            const h3 = parseInt(document.getElementById('h3').value);
+            const m3 = parseInt(document.getElementById('m3').value);
+            
+            // Call the function
+            const result = sumThreeTimes(h1, m1, h2, m2, h3, m3);
+            
+            // Format the result with HTML styling
+            const formattedResult = result.replace(/(\d{2}:\d{2})/g, '<span class="time">$1</span>')
+                                          .replace(/\+/g, '<span class="operator">+</span>')
+                                          .replace(/=/g, '<span class="equals">=</span>');
+            
+            // Display the output
+            document.getElementById('result').innerHTML = formattedResult;
+            document.getElementById('output').classList.add('show');
+        });
+    </script>
+</body>
+</html>

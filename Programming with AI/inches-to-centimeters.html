@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inches to Centimeters Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #11998e;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .converter-section {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            padding-right: 60px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 18px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #11998e;
+        }
+
+        .unit-label {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #11998e;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(17, 153, 142, 0.4);
+        }
+
+        .convert-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #11998e15 0%, #38ef7d15 100%);
+            border-radius: 12px;
+            border: 2px solid #11998e;
+            text-align: center;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-value {
+            font-size: 36px;
+            color: #11998e;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .conversion-formula {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .formula-highlight {
+            color: #11998e;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-value {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📏 Inches to Centimeters</h1>
+        <p class="subtitle">Convert inches to centimeters with precision</p>
+        
+        <form id="converterForm">
+            <div class="converter-section">
+                <label for="inches">Enter value in inches:</label>
+                <div class="input-wrapper">
+                    <input type="number" id="inches" step="0.01" value="10" required>
+                    <span class="unit-label">in</span>
+                </div>
+            </div>
+
+            <button type="submit" class="convert-btn">Convert to Centimeters</button>
+        </form>
+
+        <div class="result-section" id="result">
+            <div class="result-value" id="resultValue">0</div>
+            <div class="result-label">centimeters</div>
+            <div class="conversion-formula">
+                <span id="inchesDisplay">0</span> inches × <span class="formula-highlight">2.54</span> = <span class="formula-highlight" id="cmDisplay">0</span> cm
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function inchesToCentimeters(inches) {
+            // Convert inches to centimeters, with rounding to 2 decimal digits
+            const centimeters = inches * 2.54;
+            return Math.round(centimeters * 100) / 100;
+        }
+
+        // Handle form submission
+        document.getElementById('converterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get input value
+            const inches = parseFloat(document.getElementById('inches').value);
+            
+            // Call the function
+            const centimeters = inchesToCentimeters(inches);
+            
+            // Display the result
+            document.getElementById('resultValue').textContent = centimeters;
+            document.getElementById('inchesDisplay').textContent = inches;
+            document.getElementById('cmDisplay').textContent = centimeters;
+            document.getElementById('result').classList.add('show');
+        });
+
+        // Allow real-time conversion on input change
+        document.getElementById('inches').addEventListener('input', function() {
+            const inches = parseFloat(this.value);
+            if (!isNaN(inches)) {
+                const centimeters = inchesToCentimeters(inches);
+                document.getElementById('resultValue').textContent = centimeters;
+                document.getElementById('inchesDisplay').textContent = inches;
+                document.getElementById('cmDisplay').textContent = centimeters;
+                document.getElementById('result').classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>

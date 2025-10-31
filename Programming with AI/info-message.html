@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Info Message Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-text {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 Personal Info Generator</h1>
+        <p class="subtitle">Enter your information to generate a message</p>
+        
+        <form id="infoForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="Enter first name" value="John" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Enter last name" value="Smith" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" placeholder="Enter age" value="25" min="0" max="150" required>
+            </div>
+
+            <div class="form-group">
+                <label for="town">Town</label>
+                <input type="text" id="town" placeholder="Enter town" value="New York" required>
+            </div>
+
+            <button type="submit" class="generate-btn">Generate Message</button>
+        </form>
+
+        <div class="result-section" id="result">
+            <div class="result-text" id="resultText"></div>
+        </div>
+    </div>
+
+    <script>
+        function printInfo(firstName, lastName, age, town) {
+            return `You are ${firstName} ${lastName}, a ${age}-years old person from ${town}.`;
+        }
+
+        // Handle form submission
+        document.getElementById('infoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get input values
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const age = parseInt(document.getElementById('age').value);
+            const town = document.getElementById('town').value.trim();
+            
+            // Call the function
+            const message = printInfo(firstName, lastName, age, town);
+            
+            // Format the message with HTML highlighting
+            const formattedMessage = message
+                .replace(new RegExp(`${firstName} ${lastName}`, 'g'), `<span class="highlight">${firstName} ${lastName}</span>`)
+                .replace(new RegExp(`${age}-years`, 'g'), `<span class="highlight">${age}-years</span>`)
+                .replace(new RegExp(`${town}`, 'g'), `<span class="highlight">${town}</span>`);
+            
+            // Display the result
+            document.getElementById('resultText').innerHTML = '💬 ' + formattedMessage;
+            document.getElementById('result').classList.add('show');
+        });
+
+        // Real-time update on input change
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const age = document.getElementById('age').value;
+                const town = document.getElementById('town').value.trim();
+                
+                if (firstName && lastName && age && town) {
+                    const message = printInfo(firstName, lastName, age, town);
+                    const formattedMessage = message
+                        .replace(new RegExp(`${firstName} ${lastName}`, 'g'), `<span class="highlight">${firstName} ${lastName}</span>`)
+                        .replace(new RegExp(`${age}-years`, 'g'), `<span class="highlight">${age}-years</span>`)
+                        .replace(new RegExp(`${town}`, 'g'), `<span class="highlight">${town}</span>`);
+                    
+                    document.getElementById('resultText').innerHTML = '💬 ' + formattedMessage;
+                    document.getElementById('result').classList.add('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
