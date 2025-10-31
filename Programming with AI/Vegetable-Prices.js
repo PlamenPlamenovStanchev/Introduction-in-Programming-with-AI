@@ -13,19 +13,17 @@ function vegetablesPrice(tomatoesKg, cucumbersKg) {
     const vatAmount = totalWithoutVAT * vatRate;
     const totalWithVAT = totalWithoutVAT + vatAmount;
     
-    // Format all numbers to 2 decimal places
-    const formatPrice = (num) => num.toFixed(2);
-    
+
     // Build the output message
-    const output = 
-        `Tomatoes: ${formatPrice(tomatoesTotal)} EUR\n` +
-        `Cucumbers: ${formatPrice(cucumbersTotal)} EUR\n` +
-        `Total: ${formatPrice(totalWithoutVAT)} EUR\n` +
-        `20% VAT: ${formatPrice(vatAmount)} EUR\n` +
-        `Total price (with VAT): ${formatPrice(totalWithVAT)} EUR`;
+    return (
+        `Tomatoes: ${tomatoesTotal.toFixed(2)} EUR\n` +
+        `Cucumbers: ${cucumbersTotal.toFixed(2)} EUR\n` +
+        `Total: ${totalWithoutVAT.toFixed(2)} EUR\n` +
+        `20% VAT: ${vatAmount.toFixed(2)} EUR\n` +
+        `Total price (with VAT): ${totalWithVAT.toFixed(2)} EUR`
     
-    console.log(output);
-    return output;
+  );
+  
 }
 
 // Example usage
