@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Odd or Even</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Starfield Background */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 157, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 60% 70%, rgba(102, 51, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 10%, rgba(0, 200, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 80%, rgba(255, 0, 200, 0.1) 1px, transparent 1px);
+            background-size: 200px 200px, 300px 300px, 250px 250px, 350px 350px;
+            animation: starsShift 20s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes starsShift {
+            0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+            100% { background-position: 200px 200px, 300px 300px, 250px 250px, 350px 350px; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(20, 24, 60, 0.95));
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 40px rgba(0, 255, 157, 0.3),
+                0 0 80px rgba(102, 51, 255, 0.2),
+                inset 0 0 40px rgba(0, 255, 157, 0.1);
+            max-width: 500px;
+            width: 100%;
+            border: 2px solid rgba(0, 255, 157, 0.5);
+            animation: containerGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes containerGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 40px rgba(0, 255, 157, 0.3),
+                    0 0 80px rgba(102, 51, 255, 0.2),
+                    inset 0 0 40px rgba(0, 255, 157, 0.1);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 60px rgba(0, 255, 157, 0.5),
+                    0 0 120px rgba(102, 51, 255, 0.4),
+                    inset 0 0 60px rgba(0, 255, 157, 0.2);
+            }
+        }
+
+        h1 {
+            color: #00ff9d;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.8);
+            letter-spacing: 2px;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 157, 0.8); }
+            50% { text-shadow: 0 0 40px rgba(0, 255, 157, 1), 0 0 60px rgba(102, 51, 255, 0.6); }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6e00ff;
+            font-size: 14px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #00ff9d;
+            font-size: 16px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.6);
+            letter-spacing: 1px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 255, 157, 0.05);
+            border: 2px solid rgba(0, 255, 157, 0.3);
+            border-radius: 12px;
+            color: #00ff9d;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #00ff9d;
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+            background: rgba(0, 255, 157, 0.1);
+        }
+
+        input[type="number"]::placeholder {
+            color: rgba(0, 255, 157, 0.3);
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #00ff9d, #6e00ff);
+            color: #0a0e27;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analyze-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s ease;
+        }
+
+        .analyze-btn:hover::before {
+            left: 100%;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 157, 0.5);
+        }
+
+        .analyze-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(0, 255, 157, 0.05), rgba(102, 51, 255, 0.05));
+            border-radius: 15px;
+            border: 2px solid rgba(0, 255, 157, 0.3);
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .result-section.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+            animation: resultPulse 0.6s ease-out;
+        }
+
+        @keyframes resultPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .result-number {
+            font-size: 48px;
+            color: #00ff9d;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.8);
+            animation: numberFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes numberFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .result-text {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            animation: resultGlow 2s ease-in-out infinite;
+        }
+
+        .result-text.even {
+            color: #00ff9d;
+            text-shadow: 0 0 20px rgba(0, 255, 157, 1);
+        }
+
+        .result-text.odd {
+            color: #ff006e;
+            text-shadow: 0 0 20px rgba(255, 0, 110, 1);
+        }
+
+        @keyframes resultGlow {
+            0%, 100% { text-shadow: 0 0 20px currentColor; }
+            50% { text-shadow: 0 0 40px currentColor, 0 0 60px currentColor; }
+        }
+
+        .description {
+            margin-top: 15px;
+            color: #6e00ff;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-text {
+                font-size: 24px;
+            }
+
+            .result-number {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="starfield"></div>
+    
+    <div class="container">
+        <h1>⚛️ ODD OR EVEN</h1>
+        <p class="subtitle">Galactic Number Analyzer</p>
+        
+        <form id="oddEvenForm">
+            <div class="input-wrapper">
+                <label for="number">Enter a number:</label>
+                <input type="number" id="number" placeholder="0" value="0" required>
+            </div>
+
+            <button type="submit" class="analyze-btn">⚡ ANALYZE ⚡</button>
+        </form>
+
+        <div class="result-section" id="result">
+            <div class="result-number" id="resultNumber">0</div>
+            <div class="result-text" id="resultText">ODD</div>
+            <div class="description" id="resultDescription">Is a unique number</div>
+        </div>
+    </div>
+
+    <script>
+        function oddOrEven(num) {
+            if (num % 2 === 0)
+                return "Even";
+            else
+                return "Odd";
+        }
+
+        document.getElementById('oddEvenForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            analyzeNumber();
+        });
+
+        document.getElementById('number').addEventListener('input', function() {
+            if (this.value !== '') {
+                analyzeNumber();
+            }
+        });
+
+        function analyzeNumber() {
+            const inputNum = parseInt(document.getElementById('number').value);
+            
+            if (isNaN(inputNum)) return;
+
+            const result = oddOrEven(inputNum);
+            
+            document.getElementById('resultNumber').textContent = inputNum;
+            document.getElementById('resultText').textContent = result.toUpperCase();
+            document.getElementById('resultText').className = 'result-text ' + result.toLowerCase();
+            
+            if (result === 'Even') {
+                document.getElementById('resultDescription').textContent = `${inputNum} is divisible by 2`;
+            } else {
+                document.getElementById('resultDescription').textContent = `${inputNum} leaves remainder when divided by 2`;
+            }
+            
+            const resultElement = document.getElementById('result');
+            resultElement.classList.remove('show');
+            
+            setTimeout(() => {
+                resultElement.classList.add('show');
+                createParticles();
+            }, 10);
+        }
+
+        function createParticles() {
+            const particleCount = 8;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = window.innerWidth / 2 + 'px';
+                particle.style.top = window.innerHeight / 2 + 'px';
+                particle.style.width = '8px';
+                particle.style.height = '8px';
+                particle.style.background = i % 2 === 0 ? '#00ff9d' : '#ff006e';
+                particle.style.borderRadius = '50%';
+                particle.style.boxShadow = '0 0 10px ' + (i % 2 === 0 ? 'rgba(0, 255, 157, 0.8)' : 'rgba(255, 0, 110, 0.8)');
+                
+                document.body.appendChild(particle);
+                
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = 200;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${x}px, ${y}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => particle.remove();
+            }
+        }
+
+        // Initial analysis with default value
+        analyzeNumber();
+    </script>
+</body>
+</html>

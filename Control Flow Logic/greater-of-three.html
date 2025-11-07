@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autumn Greater of Three Numbers</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            background: linear-gradient(135deg, #1a1410 0%, #2d2218 50%, #1a1410 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Falling Leaves Background */
+        .leaves-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .leaf {
+            position: absolute;
+            opacity: 0.7;
+            font-size: 30px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -50px;
+                opacity: 0.7;
+                transform: rotateZ(0deg) rotateY(0deg);
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+                transform: rotateZ(360deg) rotateY(360deg);
+            }
+        }
+
+        .leaf:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 20%; animation-duration: 10s; animation-delay: 2s; }
+        .leaf:nth-child(3) { left: 30%; animation-duration: 12s; animation-delay: 4s; }
+        .leaf:nth-child(4) { left: 40%; animation-duration: 9s; animation-delay: 1s; }
+        .leaf:nth-child(5) { left: 50%; animation-duration: 11s; animation-delay: 3s; }
+        .leaf:nth-child(6) { left: 60%; animation-duration: 8s; animation-delay: 5s; }
+        .leaf:nth-child(7) { left: 70%; animation-duration: 10s; animation-delay: 2s; }
+        .leaf:nth-child(8) { left: 80%; animation-duration: 9s; animation-delay: 4s; }
+        .leaf:nth-child(9) { left: 90%; animation-duration: 11s; animation-delay: 1s; }
+        .leaf:nth-child(10) { left: 15%; animation-duration: 12s; animation-delay: 6s; }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(210, 140, 80, 0.1), rgba(184, 92, 40, 0.1));
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 40px rgba(210, 140, 80, 0.2),
+                0 0 80px rgba(184, 92, 40, 0.1),
+                inset 0 0 40px rgba(139, 69, 19, 0.1);
+            max-width: 700px;
+            width: 100%;
+            border: 3px solid rgba(210, 140, 80, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #d4923f;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 36px;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(212, 146, 63, 0.3); }
+            50% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 146, 63, 0.6); }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8b7355;
+            font-size: 14px;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .inputs-wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: #c9a861;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            background: rgba(210, 140, 80, 0.1);
+            border: 2px solid rgba(210, 140, 80, 0.4);
+            border-radius: 12px;
+            color: #d4923f;
+            font-family: 'Merriweather', serif;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #d4923f;
+            box-shadow: 0 0 20px rgba(212, 146, 63, 0.4);
+            background: rgba(210, 140, 80, 0.15);
+            transform: scale(1.05);
+        }
+
+        input[type="number"]::placeholder {
+            color: rgba(212, 146, 63, 0.5);
+        }
+
+        .compare-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #d4923f, #c9521f);
+            color: #f5f5dc;
+            border: 2px solid #a8623a;
+            border-radius: 12px;
+            font-family: 'Merriweather', serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+        }
+
+        .compare-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .compare-btn:hover::before {
+            left: 100%;
+        }
+
+        .compare-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 146, 63, 0.4);
+            background: linear-gradient(135deg, #e6a84b, #d4723a);
+        }
+
+        .compare-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .comparison-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .number-box {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(210, 140, 80, 0.1), rgba(184, 92, 40, 0.05));
+            border: 2px solid rgba(210, 140, 80, 0.3);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .number-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 146, 63, 0.1), transparent);
+            border-radius: 15px;
+            pointer-events: none;
+        }
+
+        .number-box.winner {
+            background: linear-gradient(135deg, rgba(212, 146, 63, 0.25), rgba(184, 92, 40, 0.15));
+            border-color: #d4923f;
+            box-shadow: 0 0 30px rgba(212, 146, 63, 0.4), inset 0 0 20px rgba(212, 146, 63, 0.1);
+            transform: scale(1.08);
+        }
+
+        .number-value {
+            font-size: 42px;
+            color: #c9a861;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .number-box.winner .number-value {
+            color: #d4923f;
+            text-shadow: 0 0 20px rgba(212, 146, 63, 0.6);
+            animation: winnerPulse 0.6s ease-out;
+        }
+
+        @keyframes winnerPulse {
+            0% {
+                transform: scale(0.8);
+                text-shadow: 0 0 10px rgba(212, 146, 63, 0.3);
+            }
+            50% {
+                transform: scale(1.15);
+                text-shadow: 0 0 40px rgba(212, 146, 63, 1);
+            }
+            100% {
+                transform: scale(1);
+                text-shadow: 0 0 20px rgba(212, 146, 63, 0.6);
+            }
+        }
+
+        .number-label {
+            font-size: 12px;
+            color: rgba(212, 146, 63, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
+            font-weight: 700;
+        }
+
+        .result-section {
+            margin-top: 20px;
+            padding: 35px;
+            background: linear-gradient(135deg, rgba(212, 146, 63, 0.15), rgba(184, 92, 40, 0.1));
+            border-radius: 15px;
+            border: 2px solid rgba(212, 146, 63, 0.4);
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-section.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+            animation: resultPulse 0.6s ease-out;
+        }
+
+        @keyframes resultPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .result-title {
+            font-size: 14px;
+            color: #8b7355;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .result-number {
+            font-size: 56px;
+            color: #d4923f;
+            margin-bottom: 12px;
+            text-shadow: 0 0 20px rgba(212, 146, 63, 0.6);
+            font-weight: 700;
+            animation: numberFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes numberFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .result-message {
+            font-size: 16px;
+            color: #c9a861;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+
+        .leaf-decoration {
+            display: inline-block;
+            margin: 0 8px;
+            animation: leafSpin 3s linear infinite;
+        }
+
+        @keyframes leafSpin {
+            0%, 100% { transform: rotateZ(0deg); }
+            50% { transform: rotateZ(20deg); }
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .inputs-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-display {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .number-value {
+                font-size: 36px;
+            }
+
+            .result-number {
+                font-size: 44px;
+            }
+
+            .container {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .inputs-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .number-value {
+                font-size: 32px;
+            }
+
+            .result-number {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="leaves-container">
+        <div class="leaf">🍂</div>
+        <div class="leaf">🍁</div>
+        <div class="leaf">🍂</div>
+        <div class="leaf">🍁</div>
+        <div class="leaf">🍂</div>
+        <div class="leaf">🍁</div>
+        <div class="leaf">🍂</div>
+        <div class="leaf">🍁</div>
+        <div class="leaf">🍂</div>
+        <div class="leaf">🍁</div>
+    </div>
+
+    <div class="container">
+        <h1><span class="leaf-decoration">🍂</span> GREATEST OF THREE <span class="leaf-decoration">🍁</span></h1>
+        <p class="subtitle">Autumn Number Comparison</p>
+        
+        <form id="greaterOfThreeForm">
+            <div class="inputs-wrapper">
+                <div class="input-wrapper">
+                    <label for="numberA">Number A</label>
+                    <input type="number" id="numberA" placeholder="0" value="0" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="numberB">Number B</label>
+                    <input type="number" id="numberB" placeholder="0" value="0" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="numberC">Number C</label>
+                    <input type="number" id="numberC" placeholder="0" value="0" required>
+                </div>
+            </div>
+
+            <button type="submit" class="compare-btn">🍂 Find Greatest 🍂</button>
+        </form>
+
+        <div class="comparison-display" id="comparison">
+            <div class="number-box" id="boxA">
+                <div class="number-value" id="valueA">0</div>
+                <div class="number-label">Number A</div>
+            </div>
+            <div class="number-box" id="boxB">
+                <div class="number-value" id="valueB">0</div>
+                <div class="number-label">Number B</div>
+            </div>
+            <div class="number-box" id="boxC">
+                <div class="number-value" id="valueC">0</div>
+                <div class="number-label">Number C</div>
+            </div>
+        </div>
+
+        <div class="result-section" id="result">
+            <div class="result-title">👑 Winner of the Harvest 👑</div>
+            <div class="result-number" id="resultNumber">0</div>
+            <div class="result-message" id="resultMessage">is the greatest</div>
+        </div>
+    </div>
+
+    <script>
+        function greaterOfThreeNumbers(a, b, c) {
+            if (a >= b && a >= c) {
+                return a;
+            } else if (b >= a && b >= c) {
+                return b;
+            } else {
+                return c;
+            } 
+        }
+
+        document.getElementById('greaterOfThreeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            compareNumbers();
+        });
+
+        document.getElementById('numberA').addEventListener('input', compareNumbers);
+        document.getElementById('numberB').addEventListener('input', compareNumbers);
+        document.getElementById('numberC').addEventListener('input', compareNumbers);
+
+        function compareNumbers() {
+            const numA = parseInt(document.getElementById('numberA').value) || 0;
+            const numB = parseInt(document.getElementById('numberB').value) || 0;
+            const numC = parseInt(document.getElementById('numberC').value) || 0;
+
+            document.getElementById('valueA').textContent = numA;
+            document.getElementById('valueB').textContent = numB;
+            document.getElementById('valueC').textContent = numC;
+
+            const greatest = greaterOfThreeNumbers(numA, numB, numC);
+
+            // Reset boxes
+            document.getElementById('boxA').classList.remove('winner');
+            document.getElementById('boxB').classList.remove('winner');
+            document.getElementById('boxC').classList.remove('winner');
+
+            // Highlight winner(s)
+            if (greatest === numA) {
+                document.getElementById('boxA').classList.add('winner');
+            }
+            if (greatest === numB) {
+                document.getElementById('boxB').classList.add('winner');
+            }
+            if (greatest === numC) {
+                document.getElementById('boxC').classList.add('winner');
+            }
+
+            // Update result
+            document.getElementById('resultNumber').textContent = greatest;
+            
+            let message = `${greatest} is the greatest`;
+            if (numA === numB && numB === numC) {
+                message = `All numbers are equal: ${greatest}`;
+            } else if (numA === greatest && numB === greatest) {
+                message = `Numbers A and B both equal ${greatest}`;
+            } else if (numB === greatest && numC === greatest) {
+                message = `Numbers B and C both equal ${greatest}`;
+            } else if (numA === greatest && numC === greatest) {
+                message = `Numbers A and C both equal ${greatest}`;
+            } else if (greatest === numA) {
+                message = `A (${numA}) is greater than B (${numB}) and C (${numC})`;
+            } else if (greatest === numB) {
+                message = `B (${numB}) is greater than A (${numA}) and C (${numC})`;
+            } else {
+                message = `C (${numC}) is greater than A (${numA}) and B (${numB})`;
+            }
+
+            document.getElementById('resultMessage').textContent = message;
+
+            const resultElement = document.getElementById('result');
+            resultElement.classList.remove('show');
+
+            setTimeout(() => {
+                resultElement.classList.add('show');
+                createLeafParticles();
+            }, 10);
+        }
+
+        function createLeafParticles() {
+            const leafEmojis = ['🍂', '🍁', '🍃'];
+            const particleCount = 12;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = window.innerWidth / 2 + 'px';
+                particle.style.top = window.innerHeight / 2 + 'px';
+                particle.style.fontSize = '24px';
+                particle.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
+                
+                document.body.appendChild(particle);
+                
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = 200;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1) rotateZ(0deg)', opacity: 1 },
+                    { transform: `translate(${x}px, ${y}px) scale(0) rotateZ(360deg)`, opacity: 0 }
+                ], {
+                    duration: 800,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => particle.remove();
+            }
+        }
+
+        // Initial comparison
+        compareNumbers();
+    </script>
+</body>
+</html>

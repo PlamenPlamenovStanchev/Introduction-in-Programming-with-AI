@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer Figure Area Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Comfortaa:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 50%, #FFE89B 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Sun */
+        .sun {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 200, 0, 0.8);
+            animation: sunGlow 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes sunGlow {
+            0%, 100% { 
+                box-shadow: 0 0 40px rgba(255, 200, 0, 0.8);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 60px rgba(255, 200, 0, 1);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Floating Clouds */
+        .clouds-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 100px;
+            opacity: 0.8;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 100px;
+        }
+
+        .cloud::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud::after {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            right: 10px;
+        }
+
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 20px;
+            left: -100px;
+            animation: floatCloud1 15s linear infinite;
+        }
+
+        .cloud2 {
+            width: 120px;
+            height: 50px;
+            top: 80px;
+            right: -120px;
+            animation: floatCloud2 20s linear infinite;
+        }
+
+        .cloud3 {
+            width: 90px;
+            height: 35px;
+            top: 50px;
+            left: -90px;
+            animation: floatCloud3 18s linear infinite;
+            animation-delay: 5s;
+        }
+
+        @keyframes floatCloud1 {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        @keyframes floatCloud2 {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-100vw - 120px)); }
+        }
+
+        @keyframes floatCloud3 {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 90px)); }
+        }
+
+        /* Beach Sand Bottom */
+        .sand {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(180deg, #F4A460, #DAA520);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 205, 0.95));
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 
+                0 20px 60px rgba(255, 165, 0, 0.3),
+                0 0 40px rgba(255, 200, 100, 0.2),
+                inset 0 0 30px rgba(255, 255, 255, 0.5);
+            max-width: 700px;
+            width: 100%;
+            border: 4px solid rgba(255, 200, 87, 0.4);
+            backdrop-filter: blur(10px);
+            animation: containerBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes containerBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        h1 {
+            color: #FF6B9D;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 36px;
+            font-family: 'Comfortaa', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
+            animation: titleWave 2s ease-in-out infinite;
+        }
+
+        @keyframes titleWave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #FF8C42;
+            font-size: 14px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .figure-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .figure-btn {
+            padding: 15px;
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            background: linear-gradient(135deg, rgba(255, 200, 124, 0.1), rgba(255, 165, 0, 0.05));
+            border-radius: 15px;
+            color: #FF6B9D;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .figure-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 200, 124, 0.2), rgba(255, 165, 0, 0.1));
+            border-color: #FF6B9D;
+            transform: translateY(-3px);
+        }
+
+        .figure-btn.active {
+            background: linear-gradient(135deg, #FF6B9D, #FF8C42);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .inputs-wrapper {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            color: #FF8C42;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 165, 0, 0.08);
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 12px;
+            color: #FF6B9D;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #FF6B9D;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            background: rgba(255, 107, 157, 0.1);
+            transform: scale(1.05);
+        }
+
+        input[type="number"]::placeholder {
+            color: rgba(255, 107, 157, 0.5);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6B9D, #FF8C42);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.3);
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s ease;
+        }
+
+        .calculate-btn:hover::before {
+            left: 100%;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 107, 157, 0.5);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Visualization */
+        .visualization {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(255, 165, 0, 0.1));
+            border-radius: 20px;
+            border: 2px solid rgba(255, 107, 157, 0.2);
+        }
+
+        .visualization.show {
+            display: block;
+            animation: visualAppear 0.6s ease-out;
+        }
+
+        @keyframes visualAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .canvas-container {
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .result-section {
+            margin-top: 20px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(255, 165, 0, 0.1));
+            border-radius: 20px;
+            border: 3px solid rgba(255, 107, 157, 0.3);
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .result-section.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+            animation: resultPulse 0.6s ease-out;
+        }
+
+        @keyframes resultPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .result-title {
+            font-size: 14px;
+            color: #FF8C42;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .result-text {
+            font-size: 28px;
+            color: #FF6B9D;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: resultFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes resultFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .figure-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .container {
+                padding: 30px;
+            }
+
+            .sun {
+                width: 60px;
+                height: 60px;
+                top: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .figure-btn {
+                padding: 12px;
+                font-size: 12px;
+            }
+
+            .result-text {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sun"></div>
+    
+    <div class="clouds-container">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+    </div>
+
+    <div class="sand"></div>
+
+    <div class="container">
+        <h1>☀️ SUMMER FIGURES ☀️</h1>
+        <p class="subtitle">Calculate Area on a Beautiful Day</p>
+        
+        <div class="figure-selector">
+            <button class="figure-btn active" data-figure="square">🟩 Square</button>
+            <button class="figure-btn" data-figure="rectangle">▭ Rectangle</button>
+            <button class="figure-btn" data-figure="circle">🔵 Circle</button>
+        </div>
+
+        <form id="areaForm">
+            <div class="inputs-wrapper">
+                <div id="dimension1Group">
+                    <label for="dimension1">Width:</label>
+                    <input type="number" id="dimension1" placeholder="0" value="5" step="0.01" required>
+                </div>
+                <div class="input-group">
+                    <div id="dimension2Group" style="display: none;">
+                        <label for="dimension2">Height:</label>
+                        <input type="number" id="dimension2" placeholder="0" value="7.85" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">⚡ Calculate Area ⚡</button>
+        </form>
+
+        <div class="visualization" id="visualization">
+            <div class="canvas-container">
+                <canvas id="shapeCanvas" width="300" height="250"></canvas>
+            </div>
+        </div>
+
+        <div class="result-section" id="result">
+            <div class="result-title">✨ Result ✨</div>
+            <div class="result-text" id="resultText">25.00</div>
+        </div>
+    </div>
+
+    <script>
+        function figureArea(figure, dimension1, dimension2) {
+            if (figure === "square") {
+                const area = dimension1 * dimension1;
+                return `square area = ${area.toFixed(2)}`;
+            } else if (figure === "rectangle") {
+                const area = dimension1 * dimension2;
+                return `rectangle area = ${area.toFixed(2)}`;
+            } else if (figure === "circle") {
+                const area = Math.PI * dimension1 * dimension1;
+                return `circle area = ${area.toFixed(2)}`;
+            } else {
+                return "Invalid figure!";
+            }
+        }
+
+        let currentFigure = 'square';
+
+        // Figure selector
+        document.querySelectorAll('.figure-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.figure-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFigure = this.dataset.figure;
+
+                // Update UI based on figure
+                const dim2Group = document.getElementById('dimension2Group');
+                const dim1Label = document.querySelector('label[for="dimension1"]');
+                
+                if (currentFigure === 'rectangle') {
+                    dim2Group.style.display = 'block';
+                    dim1Label.textContent = 'Width:';
+                } else if (currentFigure === 'circle') {
+                    dim2Group.style.display = 'none';
+                    dim1Label.textContent = 'Radius:';
+                } else {
+                    dim2Group.style.display = 'none';
+                    dim1Label.textContent = 'Width:';
+                }
+
+                calculateAndDisplay();
+            });
+        });
+
+        document.getElementById('areaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateAndDisplay();
+        });
+
+        document.getElementById('dimension1').addEventListener('input', calculateAndDisplay);
+        document.getElementById('dimension2').addEventListener('input', calculateAndDisplay);
+
+        function calculateAndDisplay() {
+            const dim1 = parseFloat(document.getElementById('dimension1').value) || 0;
+            const dim2 = parseFloat(document.getElementById('dimension2').value) || 0;
+
+            const result = figureArea(currentFigure, dim1, dim2);
+            const area = result.split(' = ')[1];
+
+            document.getElementById('resultText').textContent = area;
+            
+            const resultElement = document.getElementById('result');
+            resultElement.classList.remove('show');
+            
+            setTimeout(() => {
+                resultElement.classList.add('show');
+                drawShape(currentFigure, dim1, dim2, area);
+                createParticles();
+            }, 10);
+        }
+
+        function drawShape(figure, dim1, dim2, area) {
+            const canvas = document.getElementById('shapeCanvas');
+            const ctx = canvas.getContext('2d');
+            const viz = document.getElementById('visualization');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 107, 157, 0.3)';
+            ctx.strokeStyle = '#FF6B9D';
+            ctx.lineWidth = 3;
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            if (figure === 'square') {
+                const size = Math.min(150, dim1 * 5);
+                ctx.fillRect(centerX - size / 2, centerY - size / 2, size, size);
+                ctx.strokeRect(centerX - size / 2, centerY - size / 2, size, size);
+                ctx.fillStyle = '#FF6B9D';
+                ctx.font = 'bold 16px Fredoka';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${dim1.toFixed(2)}`, centerX, centerY + 5);
+            } else if (figure === 'rectangle') {
+                const width = Math.min(150, dim1 * 8);
+                const height = Math.min(150, dim2 * 8);
+                ctx.fillRect(centerX - width / 2, centerY - height / 2, width, height);
+                ctx.strokeRect(centerX - width / 2, centerY - height / 2, width, height);
+                ctx.fillStyle = '#FF6B9D';
+                ctx.font = 'bold 14px Fredoka';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${dim1.toFixed(2)}×${dim2.toFixed(2)}`, centerX, centerY);
+            } else if (figure === 'circle') {
+                const radius = Math.min(75, dim1 * 15);
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.fillStyle = '#FF6B9D';
+                ctx.font = 'bold 16px Fredoka';
+                ctx.textAlign = 'center';
+                ctx.fillText(`r: ${dim1.toFixed(2)}`, centerX, centerY + 5);
+            }
+
+            viz.classList.add('show');
+        }
+
+        function createParticles() {
+            const particleCount = 10;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = window.innerWidth / 2 + 'px';
+                particle.style.top = window.innerHeight / 2 + 'px';
+                particle.style.width = '12px';
+                particle.style.height = '12px';
+                particle.style.background = i % 2 === 0 ? '#FF6B9D' : '#FF8C42';
+                particle.style.borderRadius = '50%';
+                particle.style.boxShadow = `0 0 8px ${i % 2 === 0 ? 'rgba(255, 107, 157, 0.8)' : 'rgba(255, 140, 66, 0.8)'}`;
+                
+                document.body.appendChild(particle);
+                
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = 200;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${x}px, ${y}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => particle.remove();
+            }
+        }
+
+        // Initial display
+        calculateAndDisplay();
+    </script>
+</body>
+</html>
