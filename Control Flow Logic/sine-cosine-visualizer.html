@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sine & Cosine Visualizer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+            align-items: end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .visualize-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .visualize-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .visualize-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-container {
+            overflow-y: auto;
+            max-height: 500px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .degree-cell {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .cosine-cell {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .sine-cell {
+            color: #2980b9;
+            font-weight: 600;
+        }
+
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+            padding: 20px;
+            min-height: 500px;
+        }
+
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-cosine {
+            background: #27ae60;
+        }
+
+        .legend-sine {
+            background: #2980b9;
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: #c00;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ff9999;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #2980b9;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .visualize-btn {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                max-height: 300px;
+            }
+
+            .canvas-container {
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Sine & Cosine Visualizer</h1>
+            <p class="subtitle">Explore trigonometric values with interactive visualization</p>
+        </div>
+
+        <div class="content">
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="controls">
+                <div class="input-group">
+                    <label for="startDegree">Start Degree (0-360):</label>
+                    <input type="number" id="startDegree" min="0" max="360" value="0">
+                </div>
+                <div class="input-group">
+                    <label for="endDegree">End Degree (0-360):</label>
+                    <input type="number" id="endDegree" min="0" max="360" value="90">
+                </div>
+                <button class="visualize-btn" onclick="visualize()">Generate Graph</button>
+            </div>
+
+            <div class="info-box">
+                📌 Enter start and end degrees (0-360) to visualize sine and cosine values. The chart will display cosine values in <span style="color: #27ae60; font-weight: bold;">green</span> and sine values in <span style="color: #2980b9; font-weight: bold;">blue</span>.
+            </div>
+
+            <div class="grid-layout">
+                <div class="section">
+                    <div class="section-title">📋 Values Table</div>
+                    <div class="table-container">
+                        <table id="valuesTable">
+                            <thead>
+                                <tr>
+                                    <th>Degree</th>
+                                    <th>Cosine</th>
+                                    <th>Sine</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">📈 Coordinate Graph</div>
+                    <div class="canvas-container">
+                        <canvas id="canvas" width="500" height="500"></canvas>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-dot legend-cosine"></div>
+                            <span>Cosine Values</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot legend-sine"></div>
+                            <span>Sine Values</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function printDegreesCosineSine(start, end) {
+            const data = [];
+            for (let degrees = start; degrees <= end; degrees++) {
+                const radians = degrees * (Math.PI / 180);
+                const cosine = parseFloat(Math.cos(radians).toFixed(4));
+                const sine = parseFloat(Math.sin(radians).toFixed(4));
+                data.push({
+                    degrees: degrees,
+                    cosine: cosine,
+                    sine: sine
+                });
+            }
+            return data;
+        }
+
+        function visualize() {
+            const startInput = parseInt(document.getElementById('startDegree').value);
+            const endInput = parseInt(document.getElementById('endDegree').value);
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Validation
+            if (isNaN(startInput) || isNaN(endInput)) {
+                showError('Please enter valid numbers');
+                return;
+            }
+
+            if (startInput < 0 || startInput > 360 || endInput < 0 || endInput > 360) {
+                showError('Degrees must be between 0 and 360');
+                return;
+            }
+
+            if (startInput > endInput) {
+                showError('Start degree must be less than or equal to end degree');
+                return;
+            }
+
+            if (endInput - startInput > 360) {
+                showError('Range cannot exceed 360 degrees');
+                return;
+            }
+
+            errorMessage.classList.remove('show');
+
+            // Get data
+            const data = printDegreesCosineSine(startInput, endInput);
+
+            // Populate table
+            populateTable(data);
+
+            // Draw canvas
+            drawGraph(data, startInput, endInput);
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = '❌ ' + message;
+            errorMessage.classList.add('show');
+        }
+
+        function populateTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="degree-cell">${item.degrees}°</td>
+                    <td class="cosine-cell">${item.cosine.toFixed(4)}</td>
+                    <td class="sine-cell">${item.sine.toFixed(4)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function drawGraph(data, startDegree, endDegree) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const padding = 50;
+            const width = canvas.width - 2 * padding;
+            const height = canvas.height - 2 * padding;
+
+            // Clear canvas
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+
+            // X axis
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+
+            // Y axis
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.stroke();
+
+            // Draw axis labels
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 14px Roboto';
+            ctx.textAlign = 'center';
+            ctx.fillText('Degrees', canvas.width / 2, canvas.height - 10);
+
+            ctx.save();
+            ctx.translate(15, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Value', 0, 0);
+            ctx.restore();
+
+            // Draw degree markers on X axis
+            ctx.font = '12px Roboto';
+            ctx.fillStyle = '#666';
+            const step = Math.max(1, Math.floor((endDegree - startDegree) / 8));
+            for (let d = startDegree; d <= endDegree; d += step) {
+                const x = padding + ((d - startDegree) / (endDegree - startDegree)) * width;
+                ctx.beginPath();
+                ctx.moveTo(x, canvas.height - padding);
+                ctx.lineTo(x, canvas.height - padding + 5);
+                ctx.stroke();
+                ctx.textAlign = 'center';
+                ctx.fillText(d, x, canvas.height - padding + 20);
+            }
+
+            // Draw value markers on Y axis
+            ctx.textAlign = 'right';
+            for (let i = -1; i <= 1; i += 0.5) {
+                const y = canvas.height - padding - ((i + 1) / 2) * height;
+                ctx.beginPath();
+                ctx.moveTo(padding - 5, y);
+                ctx.lineTo(padding, y);
+                ctx.stroke();
+                ctx.fillText(i.toFixed(1), padding - 10, y + 5);
+            }
+
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = -1; i <= 1; i += 0.25) {
+                const y = canvas.height - padding - ((i + 1) / 2) * height;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(canvas.width - padding, y);
+                ctx.stroke();
+            }
+
+            // Plot points
+            data.forEach((item, index) => {
+                const x = padding + ((item.degrees - startDegree) / (endDegree - startDegree)) * width;
+
+                // Cosine (green)
+                const cosY = canvas.height - padding - ((item.cosine + 1) / 2) * height;
+                ctx.fillStyle = '#27ae60';
+                ctx.beginPath();
+                ctx.arc(x, cosY, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Sine (blue)
+                const sinY = canvas.height - padding - ((item.sine + 1) / 2) * height;
+                ctx.fillStyle = '#2980b9';
+                ctx.beginPath();
+                ctx.arc(x, sinY, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw lines connecting points
+                if (index > 0) {
+                    const prevX = padding + ((data[index - 1].degrees - startDegree) / (endDegree - startDegree)) * width;
+                    const prevCosY = canvas.height - padding - ((data[index - 1].cosine + 1) / 2) * height;
+                    const prevSinY = canvas.height - padding - ((data[index - 1].sine + 1) / 2) * height;
+
+                    // Cosine line
+                    ctx.strokeStyle = '#27ae60';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevCosY);
+                    ctx.lineTo(x, cosY);
+                    ctx.stroke();
+
+                    // Sine line
+                    ctx.strokeStyle = '#2980b9';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevSinY);
+                    ctx.lineTo(x, sinY);
+                    ctx.stroke();
+                }
+            });
+
+            // Draw border
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(padding, padding, width, height);
+        }
+
+        // Initial visualization
+        visualize();
+    </script>
+</body>
+</html>

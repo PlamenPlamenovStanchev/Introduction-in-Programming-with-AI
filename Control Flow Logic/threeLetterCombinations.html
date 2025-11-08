@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Letter Combinations Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            font-family: 'Roboto Mono', monospace;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #c33;
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .error.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .results-section {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .count-display {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .count-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .count-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: bold;
+        }
+
+        .combinations-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .combinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .combination {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .combination:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .info-section {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-text {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            button {
+                grid-column: 1 / -1;
+            }
+
+            .combinations-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+
+            .combination {
+                font-size: 0.9em;
+                padding: 8px;
+            }
+
+            .count-value {
+                font-size: 2em;
+            }
+        }
+
+        /* Scrollbar styling */
+        .combinations-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .combinations-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .combinations-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        .combinations-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔤 3-Letter Combinations</h1>
+        <p class="subtitle">Generate all 3-letter combinations with custom range and exclusion</p>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="startLetter">Start Letter</label>
+                <input type="text" id="startLetter" maxlength="1" value="a" placeholder="a">
+            </div>
+            <div class="input-group">
+                <label for="endLetter">End Letter</label>
+                <input type="text" id="endLetter" maxlength="1" value="c" placeholder="c">
+            </div>
+            <div class="input-group">
+                <label for="excludedLetter">Exclude Letter</label>
+                <input type="text" id="excludedLetter" maxlength="1" value="b" placeholder="b">
+            </div>
+            <button onclick="generate()">Generate</button>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="results-section" id="results">
+            <div class="count-display">
+                <div class="count-label">Total Combinations</div>
+                <div class="count-value" id="countValue">0</div>
+            </div>
+
+            <div class="combinations-container">
+                <div class="combinations-grid" id="combinationsGrid"></div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-text">
+                    <strong>Range:</strong> <span id="rangeInfo"></span> | 
+                    <strong>Excluded:</strong> <span id="excludedInfo"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function threeLettersCombinations(s, e, x) {
+            let combinations = [];
+            let count = 0;
+            
+            // Generate all 3-letter combinations
+            for (let i = s.charCodeAt(0); i <= e.charCodeAt(0); i++) {
+                let first = String.fromCharCode(i);
+                
+                // Skip excluded letter
+                if (first === x) continue;
+                
+                for (let j = s.charCodeAt(0); j <= e.charCodeAt(0); j++) {
+                    let second = String.fromCharCode(j);
+                    
+                    // Skip excluded letter
+                    if (second === x) continue;
+                    
+                    for (let k = s.charCodeAt(0); k <= e.charCodeAt(0); k++) {
+                        let third = String.fromCharCode(k);
+                        
+                        // Skip excluded letter
+                        if (third === x) continue;
+                        
+                        combinations.push(first + second + third);
+                        count++;
+                    }
+                }
+            }
+            
+            return { combinations, count };
+        }
+
+        function generate() {
+            const start = document.getElementById('startLetter').value.toLowerCase();
+            const end = document.getElementById('endLetter').value.toLowerCase();
+            const excluded = document.getElementById('excludedLetter').value.toLowerCase();
+            const errorDiv = document.getElementById('error');
+            const resultsDiv = document.getElementById('results');
+
+            errorDiv.classList.remove('show');
+
+            // Validation
+            if (!start || !end || !excluded) {
+                errorDiv.textContent = '⚠️ Please fill in all fields!';
+                errorDiv.classList.add('show');
+                resultsDiv.classList.remove('show');
+                return;
+            }
+
+            if (start.length !== 1 || end.length !== 1 || excluded.length !== 1) {
+                errorDiv.textContent = '⚠️ Please enter single letters only!';
+                errorDiv.classList.add('show');
+                resultsDiv.classList.remove('show');
+                return;
+            }
+
+            if (start > end) {
+                errorDiv.textContent = '⚠️ Start letter must be before or equal to end letter!';
+                errorDiv.classList.add('show');
+                resultsDiv.classList.remove('show');
+                return;
+            }
+
+            // Generate combinations
+            const result = threeLettersCombinations(start, end, excluded);
+
+            // Update display
+            document.getElementById('countValue').textContent = result.count;
+            document.getElementById('rangeInfo').textContent = `${start} to ${end}`;
+            document.getElementById('excludedInfo').textContent = excluded;
+
+            // Create grid
+            let gridHTML = '';
+            result.combinations.forEach((combo, index) => {
+                gridHTML += `<div class="combination" title="Combination ${index + 1}">${combo}</div>`;
+            });
+            document.getElementById('combinationsGrid').innerHTML = gridHTML;
+
+            resultsDiv.classList.add('show');
+        }
+
+        // Allow Enter key to generate
+        document.getElementById('startLetter').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generate();
+        });
+        document.getElementById('endLetter').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generate();
+        });
+        document.getElementById('excludedLetter').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generate();
+        });
+
+        // Generate on load
+        window.addEventListener('load', function() {
+            generate();
+        });
+    </script>
+</body>
+</html>

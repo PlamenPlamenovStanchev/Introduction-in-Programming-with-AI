@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangle of Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated starfield background */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 60% 70%, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 50% 50%, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 80% 10%, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90% 60%, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 30% 80%, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 10% 40%, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200% 200%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        label {
+            display: block;
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 1.1em;
+            flex: 1;
+        }
+
+        input[type="number"] {
+            padding: 12px 15px;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            font-size: 1.1em;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+            width: 80px;
+            text-align: center;
+        }
+
+        input[type="number"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #ffed4e;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #0f0c29;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .triangle-output {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ffd700;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .star-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            animation: slideIn 0.5s ease;
+        }
+
+        .star {
+            font-size: 2em;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
+            filter: drop-shadow(0 0 5px #ffed4e);
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                opacity: 0.7;
+                text-shadow: 0 0 20px #ffd700, 0 0 30px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stagger animation for each star */
+        .star-row:nth-child(1) .star { animation-delay: 0s; }
+        .star-row:nth-child(2) .star { animation-delay: 0.1s; }
+        .star-row:nth-child(3) .star { animation-delay: 0.2s; }
+        .star-row:nth-child(4) .star { animation-delay: 0.3s; }
+        .star-row:nth-child(5) .star { animation-delay: 0.4s; }
+        .star-row:nth-child(6) .star { animation-delay: 0.5s; }
+        .star-row:nth-child(7) .star { animation-delay: 0.6s; }
+        .star-row:nth-child(8) .star { animation-delay: 0.7s; }
+        .star-row:nth-child(9) .star { animation-delay: 0.8s; }
+        .star-row:nth-child(10) .star { animation-delay: 0.9s; }
+
+        .star-row:nth-child(1) { animation-delay: 0s; }
+        .star-row:nth-child(2) { animation-delay: 0.1s; }
+        .star-row:nth-child(3) { animation-delay: 0.2s; }
+        .star-row:nth-child(4) { animation-delay: 0.3s; }
+        .star-row:nth-child(5) { animation-delay: 0.4s; }
+        .star-row:nth-child(6) { animation-delay: 0.5s; }
+        .star-row:nth-child(7) { animation-delay: 0.6s; }
+        .star-row:nth-child(8) { animation-delay: 0.7s; }
+        .star-row:nth-child(9) { animation-delay: 0.8s; }
+        .star-row:nth-child(10) { animation-delay: 0.9s; }
+
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+            display: none;
+            margin-bottom: 15px;
+            border: 2px solid #ff6b6b;
+        }
+
+        .error.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                letter-spacing: 2px;
+            }
+
+            .input-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            input[type="number"] {
+                width: 100%;
+            }
+
+            .star {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Triangle of Stars ✨</h1>
+
+        <div class="input-section">
+            <div>
+                <label for="sizeInput">Size:</label>
+                <input type="number" id="sizeInput" min="1" max="20" value="5" placeholder="Enter size">
+            </div>
+            <button onclick="generateTriangle()">Generate</button>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="triangle-output" id="output"></div>
+    </div>
+
+    <script>
+        function triangle(n) {
+            let result = '';
+            for (let i = 1; i <= n; i++) {
+                for (let j = 0; j < i; j++) {
+                    result += '*';
+                }
+                result += '\n';
+            }
+            return result.trim();
+        }
+
+        function generateTriangle() {
+            const input = document.getElementById('sizeInput').value;
+            const errorDiv = document.getElementById('error');
+            const output = document.getElementById('output');
+
+            errorDiv.classList.remove('show');
+
+            if (input === '' || input < 1 || input > 20) {
+                errorDiv.textContent = '⚠️ Please enter a number between 1 and 20!';
+                errorDiv.classList.add('show');
+                output.innerHTML = '';
+                return;
+            }
+
+            const n = parseInt(input);
+            let html = '';
+
+            for (let i = 1; i <= n; i++) {
+                html += '<div class="star-row">';
+                for (let j = 0; j < i; j++) {
+                    html += '<div class="star">★</div>';
+                }
+                html += '</div>';
+            }
+
+            output.innerHTML = html;
+        }
+
+        // Allow Enter key to generate
+        document.getElementById('sizeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateTriangle();
+            }
+        });
+
+        // Generate on load
+        window.addEventListener('load', function() {
+            generateTriangle();
+        });
+    </script>
+</body>
+</html>

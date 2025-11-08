@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1em;
+            font-weight: 400;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="number"] {
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Roboto Mono', monospace;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            border-left: 5px solid #2c3e50;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .legend-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: white;
+            min-width: 40px;
+        }
+
+        .legend-badge.apartments {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .legend-badge.offices {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .legend-badge.large {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+        }
+
+        .legend-text {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .building-display {
+            background: linear-gradient(135deg, #f8f9fa, #ecf0f1);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #bdc3c7;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .floor-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #2c3e50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .unit {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Roboto Mono', monospace;
+            color: white;
+            font-size: 0.95em;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .unit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .unit.apartments {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .unit.offices {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .unit.large {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+        }
+
+        .error {
+            background: #fadbd8;
+            color: #c0392b;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #c0392b;
+            display: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .error.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #ecf0f1;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            color: #2c3e50;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .legend {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .unit {
+                font-size: 0.85em;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Building Management System</h1>
+            <p class="subtitle">Professional Building Unit Visualization & Management</p>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="floorsInput">Number of Floors</label>
+                <input type="number" id="floorsInput" min="1" max="20" value="6" placeholder="Enter floors">
+            </div>
+            <div class="input-group">
+                <label for="unitsInput">Units Per Floor</label>
+                <input type="number" id="unitsInput" min="1" max="10" value="4" placeholder="Enter units">
+            </div>
+            <button onclick="generateBuilding()">Generate Building</button>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-badge apartments">A</div>
+                <div class="legend-text">Apartments (Odd Floors)</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-badge offices">O</div>
+                <div class="legend-text">Offices (Even Floors)</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-badge large">L</div>
+                <div class="legend-text">Large Apartments (Top Floor)</div>
+            </div>
+        </div>
+
+        <div class="building-display" id="buildingDisplay"></div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Floors</div>
+                <div class="stat-value" id="totalFloors">6</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Units Per Floor</div>
+                <div class="stat-value" id="unitsPerFloor">4</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Units</div>
+                <div class="stat-value" id="totalUnits">24</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function printBuilding(floors, units) {
+            let result = '';
+            
+            for (let floor = floors; floor >= 1; floor--) {
+                let line = '';
+                let type = '';
+                
+                // Determine type: L for last floor, A for odd, O for even
+                if (floor === floors) {
+                    type = 'L';
+                } else if (floor % 2 === 1) {
+                    type = 'A';
+                } else {
+                    type = 'O';
+                }
+                
+                // Build units for this floor
+                for (let unit = 0; unit < units; unit++) {
+                    line += type + floor + unit;
+                    if (unit < units - 1) {
+                        line += ' ';
+                    }
+                }
+                
+                result += line + '\n';
+            }
+            
+            return result.trim();
+        }
+
+        function generateBuilding() {
+            const floors = parseInt(document.getElementById('floorsInput').value);
+            const units = parseInt(document.getElementById('unitsInput').value);
+            const errorDiv = document.getElementById('error');
+            const buildingDisplay = document.getElementById('buildingDisplay');
+
+            errorDiv.classList.remove('show');
+
+            if (!floors || !units || floors < 1 || floors > 20 || units < 1 || units > 10) {
+                errorDiv.textContent = '⚠️ Please enter valid values: 1-20 floors and 1-10 units per floor';
+                errorDiv.classList.add('show');
+                buildingDisplay.innerHTML = '';
+                return;
+            }
+
+            // Update stats
+            document.getElementById('totalFloors').textContent = floors;
+            document.getElementById('unitsPerFloor').textContent = units;
+            document.getElementById('totalUnits').textContent = floors * units;
+
+            // Generate building HTML
+            let html = '';
+            
+            for (let floor = floors; floor >= 1; floor--) {
+                html += '<div class="floor-row">';
+                
+                let type = '';
+                if (floor === floors) {
+                    type = 'L';
+                } else if (floor % 2 === 1) {
+                    type = 'A';
+                } else {
+                    type = 'O';
+                }
+                
+                for (let unit = 0; unit < units; unit++) {
+                    const unitId = type + floor + unit;
+                    const unitClass = type === 'L' ? 'large' : type === 'A' ? 'apartments' : 'offices';
+                    html += `<div class="unit ${unitClass}" title="Unit ${unitId}">${unitId}</div>`;
+                }
+                
+                html += '</div>';
+            }
+
+            buildingDisplay.innerHTML = html;
+        }
+
+        // Allow Enter key to generate
+        document.getElementById('floorsInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generateBuilding();
+        });
+        document.getElementById('unitsInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generateBuilding();
+        });
+
+        // Generate on load
+        window.addEventListener('load', function() {
+            generateBuilding();
+        });
+    </script>
+</body>
+</html>
