@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Figures Visualizer</title>
+    <link rel="stylesheet" href="classesFiguresVisualizer.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Colorful Figures Visualizer</h1>
+
+        <div class="content">
+            <!-- Canvas Section -->
+            <div class="canvas-section">
+                <canvas id="canvas" width="800" height="600"></canvas>
+            </div>
+
+            <!-- Info Panel Section -->
+            <div class="info-section">
+                <h2>📊 Figures Information</h2>
+                <div id="figuresList" class="figures-list">
+                    <!-- Figures will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="classes.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Helper function to convert hex color to RGB
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // Helper function to draw with transparency
+        function drawWithAlpha(color, alpha = 0.7) {
+            const rgb = hexToRgb(color.toString());
+            return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+        }
+
+        // Function to draw a square
+        function drawSquare(figure) {
+            const x = 100 + figure.x;
+            const y = 300 - figure.y;
+            const size = figure.width;
+
+            ctx.fillStyle = drawWithAlpha(figure.color);
+            ctx.strokeStyle = figure.color.toString();
+            ctx.lineWidth = 2;
+
+            ctx.fillRect(x - size / 2, y - size / 2, size, size);
+            ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+
+            // Draw position point
+            ctx.fillStyle = '#333';
+            ctx.fillRect(x - 3, y - 3, 6, 6);
+
+            // Draw label
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${size}×${size}`, x, y + size / 2 + 20);
+        }
+
+        // Function to draw a rectangle
+        function drawRectangle(figure) {
+            const x = 100 + figure.x;
+            const y = 300 - figure.y;
+
+            ctx.fillStyle = drawWithAlpha(figure.color);
+            ctx.strokeStyle = figure.color.toString();
+            ctx.lineWidth = 2;
+
+            ctx.fillRect(x - figure.width / 2, y - figure.height / 2, figure.width, figure.height);
+            ctx.strokeRect(x - figure.width / 2, y - figure.height / 2, figure.width, figure.height);
+
+            // Draw position point
+            ctx.fillStyle = '#333';
+            ctx.fillRect(x - 3, y - 3, 6, 6);
+
+            // Draw label
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${figure.width}×${figure.height}`, x, y + figure.height / 2 + 20);
+        }
+
+        // Function to draw a circle
+        function drawCircle(figure) {
+            const x = 100 + figure.x;
+            const y = 300 - figure.y;
+
+            ctx.fillStyle = drawWithAlpha(figure.color);
+            ctx.strokeStyle = figure.color.toString();
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.arc(x, y, figure.radius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw position point
+            ctx.fillStyle = '#333';
+            ctx.fillRect(x - 3, y - 3, 6, 6);
+
+            // Draw label
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`r=${figure.radius}`, x, y + figure.radius + 20);
+        }
+
+        // Function to draw an annulus
+        function drawAnnulus(figure) {
+            const x = 100 + figure.x;
+            const y = 300 - figure.y;
+
+            // Draw outer circle
+            ctx.fillStyle = drawWithAlpha(figure.color);
+            ctx.strokeStyle = figure.color.toString();
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.arc(x, y, figure.outerRadius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw inner circle (cut out)
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(x, y, figure.innerRadius, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Draw inner circle border
+            ctx.strokeStyle = figure.color.toString();
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x, y, figure.innerRadius, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            // Draw position point
+            ctx.fillStyle = '#333';
+            ctx.fillRect(x - 3, y - 3, 6, 6);
+
+            // Draw label
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`R=${figure.outerRadius},r=${figure.innerRadius}`, x, y + figure.outerRadius + 20);
+        }
+
+        // Function to draw all figures
+        function drawAllFigures(figures) {
+            // Clear canvas
+            ctx.fillStyle = '#f8f9ff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= canvas.width; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= canvas.height; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(100, 0);
+            ctx.lineTo(100, canvas.height);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 300);
+            ctx.lineTo(canvas.width, 300);
+            ctx.stroke();
+
+            // Draw axis labels
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('X', canvas.width - 10, 310);
+            ctx.textAlign = 'right';
+            ctx.fillText('Y', 95, 15);
+
+            // Draw figures
+            figures.forEach((figure) => {
+                if (figure instanceof ColorfulSquare) {
+                    drawSquare(figure);
+                } else if (figure instanceof ColorfulRectangle) {
+                    drawRectangle(figure);
+                } else if (figure instanceof ColorfulCircle) {
+                    drawCircle(figure);
+                } else if (figure instanceof ColorfulAnnulus) {
+                    drawAnnulus(figure);
+                }
+            });
+        }
+
+        // Function to create info panel
+        function createInfoPanel(figures) {
+            const list = document.getElementById('figuresList');
+            let html = '';
+
+            figures.forEach((figure, index) => {
+                html += `
+                    <div class="figure-item">
+                        <div class="figure-header">
+                            <div class="figure-title">Figure ${index + 1}</div>
+                            <div class="figure-color" style="background-color: ${figure.color.toString()}"></div>
+                        </div>
+                        <div class="figure-details">
+                            <p><strong>Type:</strong> ${figure.constructor.name}</p>
+                            <p><strong>Position:</strong> ({${figure.x}, ${figure.y}})</p>
+                            <p><strong>Color:</strong> ${figure.color.toString()}</p>
+                            ${figure.width ? `<p><strong>Width:</strong> ${figure.width}</p>` : ''}
+                            ${figure.height ? `<p><strong>Height:</strong> ${figure.height}</p>` : ''}
+                            ${figure.radius ? `<p><strong>Radius:</strong> ${figure.radius}</p>` : ''}
+                            ${figure.outerRadius ? `<p><strong>Outer Radius:</strong> ${figure.outerRadius}</p>` : ''}
+                            ${figure.innerRadius ? `<p><strong>Inner Radius:</strong> ${figure.innerRadius}</p>` : ''}
+                            <p><strong>Area:</strong> ${figure.area().toFixed(2)} units²</p>
+                            <p><strong>Perimeter:</strong> ${figure.perimeter().toFixed(2)} units</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html;
+        }
+
+        // Create colorful figures
+        const figures = [
+            new ColorfulSquare(80, 150, 40, new Color(255, 122, 30)),
+            new ColorfulRectangle(250, 100, 60, 40, new Color(127, 170, 232)),
+            new ColorfulCircle(450, 150, 35, new Color(0, 238, 0)),
+            new ColorfulAnnulus(600, 150, 40, 20, new Color(238, 51, 51)),
+            new ColorfulSquare(150, -100, 30, new Color(255, 200, 100)),
+            new ColorfulRectangle(380, -80, 50, 30, new Color(100, 150, 200)),
+            new ColorfulCircle(600, -100, 25, new Color(50, 200, 100)),
+        ];
+
+        // Draw all figures
+        drawAllFigures(figures);
+
+        // Create info panel
+        createInfoPanel(figures);
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Size Generator</title>
+    <link rel="stylesheet" href="textSizeGenerator.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>📝 Text Size Generator</h1>
+            
+            <div class="form-section">
+                <div class="input-group">
+                    <label for="startSize">Start Size (pt):</label>
+                    <input 
+                        type="number" 
+                        id="startSize" 
+                        placeholder="Enter start size"
+                        min="0"
+                        max="99"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="endSize">End Size (pt):</label>
+                    <input 
+                        type="number" 
+                        id="endSize" 
+                        placeholder="Enter end size"
+                        min="1"
+                        max="100"
+                    >
+                </div>
+
+                <button class="btn-print" onclick="printText()">
+                    🖨️ Print Text
+                </button>
+            </div>
+
+            <div class="output-section">
+                <h2>Output:</h2>
+                <div id="output" class="output-container">
+                    <p class="placeholder">Click "Print Text" to generate output</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function printText() {
+            // Get input values
+            const startSize = parseInt(document.getElementById('startSize').value);
+            const endSize = parseInt(document.getElementById('endSize').value);
+            const outputDiv = document.getElementById('output');
+
+            // Validate inputs
+            if (isNaN(startSize) || isNaN(endSize)) {
+                outputDiv.innerHTML = '<p class="error">❌ Invalid range</p>';
+                return;
+            }
+
+            // Check range: 0 < start size < end size < 100
+            if (startSize <= 0 || startSize >= endSize || endSize >= 100) {
+                outputDiv.innerHTML = '<p class="error">❌ Invalid range</p>';
+                return;
+            }
+
+            // Generate text for each size in the range
+            let html = '';
+            for (let size = startSize; size <= endSize; size++) {
+                html += `<div style="font-size: ${size}pt" class="size-item">Size ${size}</div>`;
+            }
+
+            outputDiv.innerHTML = html;
+        }
+
+        // Allow Enter key to trigger the function
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                printText();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearest Point Visualizer</title>
+    <link rel="stylesheet" href="nearestPointVisualizer.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📍 Nearest Point Visualizer</h1>
+
+        <div class="content">
+            <!-- Canvas Section -->
+            <div class="section">
+                <h2>🎯 Coordinate Plate</h2>
+                <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
+                    <strong>First click:</strong> Set location | <strong>Following clicks:</strong> Add points
+                </p>
+                <canvas id="canvas" width="500" height="500"></canvas>
+                <div class="controls">
+                    <div class="button-group">
+                        <button class="btn-clear" onclick="clearPoints()">Clear Points</button>
+                        <button class="btn-reset" onclick="resetAll()">Reset All</button>
+                    </div>
+                </div>
+                <div class="info-box">
+                    💡 <strong>Instructions:</strong> Click on the canvas to place the location (first click), 
+                    then add multiple points. The nearest point will be highlighted in green.
+                </div>
+            </div>
+
+            <!-- Control Panel Section -->
+            <div class="section">
+                <h2>📋 Control Panel</h2>
+                <div class="form-section">
+                    <div class="location-group">
+                        <h3>📍 Location</h3>
+                        <div class="form-group">
+                            <label>X:</label>
+                            <input type="number" id="locX" placeholder="X coordinate" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Y:</label>
+                            <input type="number" id="locY" placeholder="Y coordinate" readonly>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin-top: 15px;">📌 Points</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 4px;">X:</label>
+                            <input type="number" id="pointX" placeholder="X coordinate">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px;">Y:</label>
+                            <input type="number" id="pointY" placeholder="Y coordinate">
+                        </div>
+                    </div>
+                    <button style="width: 100%; background: #1890ff; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 15px;" onclick="addPointManually()">
+                        ➕ Add Point
+                    </button>
+
+                    <h3 style="color: #667eea;">📊 Points List</h3>
+                    <div id="pointsList" class="points-list">
+                        <div class="empty-state">No points added yet</div>
+                    </div>
+
+                    <div id="nearestInfo" class="distance-display" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let location = null;
+        let points = [];
+        let nearestPointObj = null;
+
+        const CANVAS_WIDTH = 500;
+        const CANVAS_HEIGHT = 500;
+        const GRID_SIZE = 50;
+        const POINT_RADIUS = 6;
+
+        // Function to find nearest point (from the JS file)
+        function nearestPoint({locX, locY}, ...pointsArray) {
+            if (pointsArray.length === 0) return null;
+            
+            let closestPoint = pointsArray[0];
+            let minDistance = Math.sqrt((pointsArray[0].x - locX)**2 + (pointsArray[0].y - locY)**2);
+
+            for (const point of pointsArray) {
+                const distance = Math.sqrt((point.x - locX)**2 + (point.y - locY)**2);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPoint = point;
+                }
+            }
+
+            return {point: closestPoint, distance: minDistance};
+        }
+
+        // Draw the coordinate system
+        function drawGrid() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+            // Draw grid lines
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= CANVAS_WIDTH; i += GRID_SIZE) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, CANVAS_HEIGHT);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(CANVAS_WIDTH, i);
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, CANVAS_HEIGHT);
+            ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, CANVAS_HEIGHT);
+            ctx.stroke();
+
+            // Draw axis labels
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= CANVAS_WIDTH; i += GRID_SIZE) {
+                ctx.fillText(i, i, CANVAS_HEIGHT + 15);
+            }
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= CANVAS_HEIGHT; i += GRID_SIZE) {
+                ctx.fillText(i, -5, CANVAS_HEIGHT - i + 4);
+            }
+        }
+
+        // Convert canvas coordinates to data coordinates
+        function canvasToData(canvasX, canvasY) {
+            return {
+                x: canvasX,
+                y: CANVAS_HEIGHT - canvasY
+            };
+        }
+
+        // Convert data coordinates to canvas coordinates
+        function dataToCanvas(x, y) {
+            return {
+                x: x,
+                y: CANVAS_HEIGHT - y
+            };
+        }
+
+        // Draw all elements
+        function draw() {
+            drawGrid();
+
+            // Draw all points
+            for (let point of points) {
+                const canvasPos = dataToCanvas(point.x, point.y);
+                ctx.fillStyle = nearestPointObj && nearestPointObj.point === point ? '#52c41a' : '#667eea';
+                ctx.beginPath();
+                ctx.arc(canvasPos.x, canvasPos.y, POINT_RADIUS, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Draw point label
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`(${point.x}, ${point.y})`, canvasPos.x, canvasPos.y - 15);
+            }
+
+            // Draw location
+            if (location) {
+                const canvasPos = dataToCanvas(location.x, location.y);
+                ctx.fillStyle = '#faad14';
+                ctx.beginPath();
+                ctx.arc(canvasPos.x, canvasPos.y, POINT_RADIUS + 3, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Draw location label
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`LOC (${location.x}, ${location.y})`, canvasPos.x, canvasPos.y - 20);
+            }
+        }
+
+        // Handle canvas click
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const canvasX = e.clientX - rect.left;
+            const canvasY = e.clientY - rect.top;
+
+            if (canvasX < 0 || canvasX > CANVAS_WIDTH || canvasY < 0 || canvasY > CANVAS_HEIGHT) return;
+
+            const dataCoords = canvasToData(canvasX, canvasY);
+
+            if (!location) {
+                location = dataCoords;
+                document.getElementById('locX').value = location.x;
+                document.getElementById('locY').value = location.y;
+            } else {
+                points.push(dataCoords);
+            }
+
+            updatePointsList();
+            draw();
+        });
+
+        // Add point manually
+        function addPointManually() {
+            if (!location) {
+                alert('Please set the location first by clicking on the canvas!');
+                return;
+            }
+
+            const xInput = document.getElementById('pointX').value.trim();
+            const yInput = document.getElementById('pointY').value.trim();
+
+            if (xInput === '' || yInput === '') {
+                alert('Please enter both X and Y coordinates');
+                return;
+            }
+
+            const x = parseInt(xInput);
+            const y = parseInt(yInput);
+
+            if (isNaN(x) || isNaN(y)) {
+                alert('Please enter valid integer coordinates');
+                return;
+            }
+
+            if (x < 0 || x > CANVAS_WIDTH || y < 0 || y > CANVAS_HEIGHT) {
+                alert(`Please enter coordinates within range 0-${CANVAS_WIDTH} for X and 0-${CANVAS_HEIGHT} for Y`);
+                return;
+            }
+
+            points.push({x, y});
+            document.getElementById('pointX').value = '';
+            document.getElementById('pointY').value = '';
+
+            updatePointsList();
+            draw();
+        }
+
+        // Update points list display
+        function updatePointsList() {
+            const list = document.getElementById('pointsList');
+            
+            if (points.length === 0) {
+                list.innerHTML = '<div class="empty-state">No points added yet</div>';
+                document.getElementById('nearestInfo').style.display = 'none';
+                return;
+            }
+
+            // Calculate nearest point
+            if (location && points.length > 0) {
+                const result = nearestPoint(location, ...points);
+                nearestPointObj = result;
+            }
+
+            let html = '';
+
+            // Display location
+            if (location) {
+                html += `<div class="point-item location">
+                    📍 LOC (${location.x}, ${location.y})
+                </div>`;
+            }
+
+            // Display points
+            for (let i = 0; i < points.length; i++) {
+                const point = points[i];
+                const isNearest = nearestPointObj && nearestPointObj.point === point;
+                const distance = location ? Math.sqrt((point.x - location.x)**2 + (point.y - location.y)**2).toFixed(2) : 'N/A';
+
+                html += `<div class="point-item ${isNearest ? 'nearest' : ''}">
+                    <span>${isNearest ? '✓ ' : ''}P${i+1} (${point.x}, ${point.y}) - d: ${distance}</span>
+                    <button class="remove-btn" onclick="removePoint(${i})">Remove</button>
+                </div>`;
+            }
+
+            list.innerHTML = html;
+
+            // Display nearest point info
+            if (nearestPointObj) {
+                const infoBox = document.getElementById('nearestInfo');
+                infoBox.innerHTML = `✓ <strong>Nearest Point:</strong> (${nearestPointObj.point.x}, ${nearestPointObj.point.y})<br><strong>Distance:</strong> ${nearestPointObj.distance.toFixed(2)} units`;
+                infoBox.style.display = 'block';
+            }
+        }
+
+        // Remove point
+        function removePoint(index) {
+            points.splice(index, 1);
+            updatePointsList();
+            draw();
+        }
+
+        // Clear all points
+        function clearPoints() {
+            points = [];
+            nearestPointObj = null;
+            updatePointsList();
+            draw();
+        }
+
+        // Reset everything
+        function resetAll() {
+            location = null;
+            points = [];
+            nearestPointObj = null;
+            document.getElementById('locX').value = '';
+            document.getElementById('locY').value = '';
+            document.getElementById('pointX').value = '';
+            document.getElementById('pointY').value = '';
+            updatePointsList();
+            draw();
+        }
+
+        // Initial draw
+        draw();
+    </script>
+</body>
+</html>

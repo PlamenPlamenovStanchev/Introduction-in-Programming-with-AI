@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>printHtmlSnippet Function Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .output-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .code-output {
+            background-color: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            word-break: break-all;
+            white-space: pre-wrap;
+            color: #333;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .rendered-output {
+            background-color: #f9f9f9;
+            border-left: 4px solid #764ba2;
+            padding: 15px;
+            border-radius: 4px;
+            min-height: 150px;
+        }
+
+        .rendered-output h1 {
+            text-shadow: none;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .rendered-output p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .output-section {
+                grid-column: 1;
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 printHtmlSnippet Function Visualizer</h1>
+
+        <div class="content">
+            <!-- Input Section -->
+            <div class="section">
+                <h2>📝 Input</h2>
+                <form id="form">
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            value="Welcome!" 
+                            placeholder="Enter a title"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="text">Text:</label>
+                        <textarea 
+                            id="text" 
+                            placeholder="Enter text content"
+                        >This is a sample HTML snippet generator. Try changing the values!</textarea>
+                    </div>
+                    <button type="submit">✨ Generate HTML</button>
+                </form>
+            </div>
+
+            <!-- Function Code Section -->
+            <div class="section">
+                <h2>💻 Function Code</h2>
+                <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; font-size: 12px; overflow-x: auto;"><code>function printHtmlSnippet(title, text){
+    function printAsHTML(text, tag = 'div') {
+        return `&lt;${tag}&gt;${text}&lt;/${tag}&gt;`;
+    }
+    const titleHTML = printAsHTML(title, 'h1');
+    const textHTML = printAsHTML(text, 'p');
+    return printAsHTML(titleHTML + textHTML);
+}</code></pre>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-section">
+                <div class="section">
+                    <h2>📄 HTML Code Output</h2>
+                    <div id="codeOutput" class="code-output empty-state">
+                        Click "Generate HTML" to see the output
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🎯 Rendered HTML</h2>
+                    <div id="renderedOutput" class="rendered-output empty-state">
+                        Click "Generate HTML" to see the rendered output
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // The function to visualize
+        function printHtmlSnippet(title, text){
+            function printAsHTML(text, tag = 'div') {
+                return `<${tag}>${text}</${tag}>`;
+            }
+            const titleHTML = printAsHTML(title, 'h1');
+            const textHTML = printAsHTML(text, 'p');
+            return printAsHTML(titleHTML + textHTML);
+        }
+
+        // Form submission handler
+        document.getElementById('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const text = document.getElementById('text').value;
+
+            // Generate the HTML
+            const result = printHtmlSnippet(title, text);
+
+            // Display the HTML code
+            const codeOutput = document.getElementById('codeOutput');
+            codeOutput.textContent = result;
+            codeOutput.classList.remove('empty-state');
+
+            // Display the rendered HTML
+            const renderedOutput = document.getElementById('renderedOutput');
+            renderedOutput.innerHTML = result;
+            renderedOutput.classList.remove('empty-state');
+        });
+
+        // Generate initial output
+        document.getElementById('form').dispatchEvent(new Event('submit'));
+    </script>
+</body>
+</html>

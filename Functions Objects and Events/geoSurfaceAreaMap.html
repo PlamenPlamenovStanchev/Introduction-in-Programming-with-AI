@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo Surface Area Calculator</title>
+    <link rel="stylesheet" href="geoSurfaceArea.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Geo Surface Area Calculator</h1>
+        
+        <div class="content">
+            <!-- Map Section -->
+            <div class="map-section">
+                <div id="map"></div>
+                <div class="map-instructions">
+                    <p>💡 <strong>Click on the map</strong> to add points and create a polygon. Use the buttons below to manage your polygon.</p>
+                </div>
+            </div>
+
+            <!-- Control Panel Section -->
+            <div class="control-panel">
+                <div class="panel-section">
+                    <h2>🎯 Polygon Points</h2>
+                    <div id="pointsList" class="points-list">
+                        <div class="empty-state">No points added yet</div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2>🛠️ Controls</h2>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="calculateArea()">
+                            📐 Calculate Area
+                        </button>
+                        <button class="btn btn-warning" onclick="undoPoint()">
+                            ↶ Undo Point
+                        </button>
+                        <button class="btn btn-danger" onclick="clearPolygon()">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2>📊 Result</h2>
+                    <div id="resultBox" class="result-box empty">
+                        <p>Click "Calculate Area" to see results</p>
+                    </div>
+                </div>
+
+                <div class="panel-section info-section">
+                    <h3>ℹ️ Information</h3>
+                    <ul>
+                        <li><strong>Points Required:</strong> At least 3 points</li>
+                        <li><strong>Earth Model:</strong> Perfect sphere (R = 6,371 km)</li>
+                        <li><strong>Formula:</strong> Girard's Theorem for spherical polygons</li>
+                        <li><strong>Unit:</strong> Square meters (m²)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="geoSurfaceArea.js"></script>
+    <script>
+        // Map initialization
+        let map = L.map('map').setView([42.6977, 23.3219], 18); // Sofia, Bulgaria as default
+        
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Store polygon data
+        let points = [];
+        let markers = [];
+        let polygon = null;
+        let polyline = null;
+
+        // Map click handler to add points
+        map.on('click', (e) => {
+            addPoint(e.latlng);
+        });
+
+        // Add a point to the polygon
+        function addPoint(latlng) {
+            // Store the point
+            points.push({
+                latitude: latlng.lat,
+                longitude: latlng.lng
+            });
+
+            // Create marker
+            const marker = L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: '#1890ff',
+                color: '#0050b3',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map);
+
+            // Add label with point number
+            const label = L.tooltip({
+                permanent: true,
+                direction: 'right'
+            })
+                .setContent(`P${points.length}`)
+                .setLatLng(latlng)
+                .addTo(map);
+
+            markers.push({marker, label});
+
+            // Update polyline
+            updatePolyline();
+
+            // Update UI
+            updatePointsList();
+        }
+
+        // Update the polyline connecting points
+        function updatePolyline() {
+            if (polyline) {
+                map.removeLayer(polyline);
+            }
+
+            if (points.length > 1) {
+                const latlngs = points.map(p => [p.latitude, p.longitude]);
+                polyline = L.polyline(latlngs, {
+                    color: '#667eea',
+                    weight: 2,
+                    opacity: 0.7,
+                    dashArray: '5, 5'
+                }).addTo(map);
+            }
+        }
+
+        // Update polygon display after calculation
+        function updatePolygon() {
+            if (polygon) {
+                map.removeLayer(polygon);
+            }
+
+            if (points.length > 2) {
+                const latlngs = points.map(p => [p.latitude, p.longitude]);
+                polygon = L.polygon(latlngs, {
+                    color: '#52c41a',
+                    fillColor: '#95de64',
+                    weight: 3,
+                    opacity: 0.8,
+                    fillOpacity: 0.3
+                }).addTo(map);
+            }
+        }
+
+        // Update points list in UI
+        function updatePointsList() {
+            const list = document.getElementById('pointsList');
+
+            if (points.length === 0) {
+                list.innerHTML = '<div class="empty-state">No points added yet</div>';
+                return;
+            }
+
+            let html = '<div class="point-list-items">';
+            for (let i = 0; i < points.length; i++) {
+                const p = points[i];
+                html += `<div class="point-list-item">
+                    <span>P${i + 1}: ${p.latitude.toFixed(6)}, ${p.longitude.toFixed(6)}</span>
+                    <button class="remove-btn" onclick="removePoint(${i})">✕</button>
+                </div>`;
+            }
+            html += '</div>';
+            list.innerHTML = html;
+        }
+
+        // Remove a specific point
+        function removePoint(index) {
+            // Remove marker and label
+            const {marker, label} = markers[index];
+            map.removeLayer(marker);
+            map.removeLayer(label);
+
+            // Remove point
+            points.splice(index, 1);
+            markers.splice(index, 1);
+
+            // Update display
+            updatePolyline();
+            clearPolygonDisplay();
+            updatePointsList();
+        }
+
+        // Undo the last point
+        function undoPoint() {
+            if (points.length > 0) {
+                removePoint(points.length - 1);
+            }
+        }
+
+        // Clear all points
+        function clearPolygon() {
+            // Remove all markers and labels
+            markers.forEach(({marker, label}) => {
+                map.removeLayer(marker);
+                map.removeLayer(label);
+            });
+
+            // Remove polyline and polygon
+            if (polyline) map.removeLayer(polyline);
+            if (polygon) map.removeLayer(polygon);
+
+            // Clear data
+            points = [];
+            markers = [];
+            polygon = null;
+            polyline = null;
+
+            // Update UI
+            updatePointsList();
+            clearResultBox();
+        }
+
+        // Clear polygon display without removing data
+        function clearPolygonDisplay() {
+            if (polygon) {
+                map.removeLayer(polygon);
+                polygon = null;
+            }
+        }
+
+        // Calculate the area
+        function calculateArea() {
+            if (points.length < 3) {
+                showResult('error', `❌ Error: At least 3 points are required (you have ${points.length})`);
+                return;
+            }
+
+            try {
+                // Call the calculateGeoArea function from geoSurfaceArea.js
+                const area = calculateGeoArea(...points);
+
+                // Format the result
+                let resultText = `✅ <strong>Area Calculated</strong><br>`;
+                resultText += `<strong>${area.toFixed(2)} m²</strong><br>`;
+                resultText += `<small>${(area / 10000).toFixed(4)} hectares (ha)</small><br>`;
+                resultText += `<small>${(area / 1000000).toFixed(6)} km²</small>`;
+
+                showResult('success', resultText);
+
+                // Draw the filled polygon
+                updatePolygon();
+            } catch (error) {
+                showResult('error', `❌ Error: ${error.message}`);
+            }
+        }
+
+        // Show result
+        function showResult(type, message) {
+            const resultBox = document.getElementById('resultBox');
+            resultBox.className = `result-box ${type}`;
+            resultBox.innerHTML = `<p>${message}</p>`;
+        }
+
+        // Clear result box
+        function clearResultBox() {
+            const resultBox = document.getElementById('resultBox');
+            resultBox.className = 'result-box empty';
+            resultBox.innerHTML = '<p>Click "Calculate Area" to see results</p>';
+        }
+    </script>
+</body>
+</html>
