@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Book App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f9f9f9;
+            border-bottom: 2px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        input, textarea {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 40px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        button.delete {
+            background: #e74c3c;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        button.delete:hover {
+            background: #c0392b;
+        }
+
+        button.edit {
+            background: #3498db;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        button.edit:hover {
+            background: #2980b9;
+        }
+
+        button.secondary {
+            background: #95a5a6;
+        }
+
+        button.secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .toolbar {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .toolbar button {
+            padding: 8px 15px;
+        }
+
+        .contacts-list {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .contact-card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .contact-detail {
+            font-size: 13px;
+            color: #666;
+            margin: 3px 0;
+        }
+
+        .contact-detail strong {
+            color: #333;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+
+        .status-message {
+            padding: 12px 20px;
+            background: #d5f4e6;
+            color: #27ae60;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .contact-card {
+                flex-direction: column;
+            }
+
+            .contact-buttons {
+                margin-left: 0;
+                margin-top: 10px;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📱 Phone Book</h1>
+            <p>Manage your contacts</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Filter by Name:</label>
+                <input type="text" id="filterInput" placeholder="Search...">
+            </div>
+            <div class="action-buttons">
+                <button onclick="sortByName()">Sort by Name</button>
+                <button onclick="openAddModal()">+ Add Contact</button>
+            </div>
+        </div>
+
+        <div id="statusMessage" class="status-message"></div>
+
+        <div class="contacts-list" id="contactsList">
+            <div class="empty-message">No contacts yet. Add one to get started!</div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">Add Contact</div>
+            <div class="form-group">
+                <label>Name:</label>
+                <input type="text" id="nameInput" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Phone:</label>
+                <input type="text" id="phoneInput" placeholder="0888 123-456">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="emailInput" placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label>Comments:</label>
+                <textarea id="commentsInput" placeholder="Add notes..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="saveContact()">Save</button>
+                <button class="secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let contacts = [
+            {name: "Peter", phone: "0888 999-111", email: "pp@yahoo.com", comments: "friend"},
+            {name: "Maria", phone: "0805 777-8888", email: "m@abv.bg", comments: ""},
+            {name: "John", phone: "0878 456-789", email: "john@example.com", comments: "colleague"}
+        ];
+
+        let editingIndex = -1;
+        let filteredContacts = [...contacts];
+
+        // Display contacts
+        function displayContacts(list = contacts) {
+            const container = document.getElementById('contactsList');
+            filteredContacts = list;
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty-message">No contacts found.</div>';
+                return;
+            }
+
+            container.innerHTML = list.map((contact, index) => `
+                <div class="contact-card">
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.name}</div>
+                        <div class="contact-detail"><strong>Phone:</strong> ${contact.phone}</div>
+                        <div class="contact-detail"><strong>Email:</strong> ${contact.email}</div>
+                        ${contact.comments ? `<div class="contact-detail"><strong>Notes:</strong> ${contact.comments}</div>` : ''}
+                    </div>
+                    <div class="contact-buttons">
+                        <button class="edit" onclick="openEditModal(${index})">Edit</button>
+                        <button class="delete" onclick="deleteContact(${index})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add contact
+        function openAddModal() {
+            editingIndex = -1;
+            document.getElementById('modalHeader').textContent = 'Add Contact';
+            clearForm();
+            document.getElementById('modal').classList.add('show');
+            document.getElementById('nameInput').focus();
+        }
+
+        // Edit contact
+        function openEditModal(index) {
+            editingIndex = index;
+            const contact = contacts[index];
+            document.getElementById('modalHeader').textContent = 'Edit Contact';
+            document.getElementById('nameInput').value = contact.name;
+            document.getElementById('phoneInput').value = contact.phone;
+            document.getElementById('emailInput').value = contact.email;
+            document.getElementById('commentsInput').value = contact.comments;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        // Save contact
+        function saveContact() {
+            const name = document.getElementById('nameInput').value.trim();
+            const phone = document.getElementById('phoneInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim();
+            const comments = document.getElementById('commentsInput').value.trim();
+
+            if (!name || !phone) {
+                showStatus('Name and Phone are required!', 'error');
+                return;
+            }
+
+            const contact = {name, phone, email, comments};
+
+            if (editingIndex === -1) {
+                contacts.push(contact);
+                showStatus('Contact added successfully!', 'success');
+            } else {
+                contacts[editingIndex] = contact;
+                showStatus('Contact updated successfully!', 'success');
+            }
+
+            closeModal();
+            filterContacts();
+        }
+
+        // Delete contact
+        function deleteContact(index) {
+            if (confirm(`Delete ${contacts[index].name}?`)) {
+                contacts.splice(index, 1);
+                showStatus('Contact deleted!', 'success');
+                filterContacts();
+            }
+        }
+
+        // Sort by name
+        function sortByName() {
+            contacts.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+            displayContacts(contacts);
+            showStatus('Contacts sorted by name!', 'success');
+        }
+
+        // Filter contacts
+        function filterContacts() {
+            const searchTerm = document.getElementById('filterInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                displayContacts(contacts);
+            } else {
+                const filtered = contacts.filter(contact =>
+                    contact.name.toLowerCase().includes(searchTerm) ||
+                    contact.phone.includes(searchTerm) ||
+                    contact.email.toLowerCase().includes(searchTerm) ||
+                    contact.comments.toLowerCase().includes(searchTerm)
+                );
+                displayContacts(filtered);
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+            clearForm();
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('nameInput').value = '';
+            document.getElementById('phoneInput').value = '';
+            document.getElementById('emailInput').value = '';
+            document.getElementById('commentsInput').value = '';
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message show ${type}`;
+            setTimeout(() => statusEl.classList.remove('show'), 3000);
+        }
+
+        // Event listeners
+        document.getElementById('filterInput').addEventListener('input', filterContacts);
+        
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modal')) {
+                closeModal();
+            }
+        });
+
+        // Initial display
+        displayContacts();
+    </script>
+</body>
+</html>

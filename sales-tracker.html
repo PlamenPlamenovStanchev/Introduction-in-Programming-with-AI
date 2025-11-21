@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Tracker</title>
+    <link rel="stylesheet" href="sales-tracker.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💼 Sales Tracker</h1>
+            <p>Manage products, prices, locations, and track sales</p>
+        </header>
+
+        <nav class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('products')">📦 Product Editor</button>
+            <button class="tab-btn" onclick="switchTab('prices')">💲 Price Editor</button>
+            <button class="tab-btn" onclick="switchTab('locations')">📍 Locations</button>
+            <button class="tab-btn" onclick="switchTab('sales')">📊 Sales</button>
+            <button class="tab-btn" onclick="switchTab('reports')">📈 Reports</button>
+        </nav>
+
+        <main class="tabs-container">
+            <!-- Product Editor Tab -->
+            <div id="products" class="tab-content active">
+                <h2>📦 Product Editor</h2>
+                <div id="productsContent"></div>
+            </div>
+
+            <!-- Price Editor Tab -->
+            <div id="prices" class="tab-content">
+                <h2>💲 Price Editor</h2>
+                <div id="pricesContent"></div>
+            </div>
+
+            <!-- Locations Tab -->
+            <div id="locations" class="tab-content">
+                <h2>📍 Locations</h2>
+                <div id="locationsContent"></div>
+            </div>
+
+            <!-- Sales Tab -->
+            <div id="sales" class="tab-content">
+                <h2>📊 Sales</h2>
+                <div id="salesContent"></div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <h2>📈 Reports</h2>
+                <div id="reportsContent"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="sales-tracker.js"></script>
+    <script src="sales-tracker-products.js"></script>
+    <script src="sales-tracker-prices.js"></script>
+    <script src="sales-tracker-locations.js"></script>
+    <script src="sales-tracker-sales.js"></script>
+    <script src="sales-tracker-reports.js"></script>
+</body>
+</html>

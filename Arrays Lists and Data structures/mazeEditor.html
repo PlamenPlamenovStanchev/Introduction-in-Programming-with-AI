@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Maze Editor</title>
+    <link rel="stylesheet" href="mazeEditorStyles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <h1>🎮 2D Maze Editor</h1>
+            
+            <div class="control-group">
+                <label>Width: <span id="widthValue">10</span></label>
+                <input type="range" id="widthSlider" min="5" max="30" value="10" oninput="updateDimensions()">
+            </div>
+
+            <div class="control-group">
+                <label>Height: <span id="heightValue">10</span></label>
+                <input type="range" id="heightSlider" min="5" max="30" value="10" oninput="updateDimensions()">
+            </div>
+
+            <div class="mode-selector">
+                <label>Mode:</label>
+                <button class="mode-btn active" onclick="setMode('wall')">🧱 Wall</button>
+                <button class="mode-btn" onclick="setMode('free')">⬜ Free</button>
+                <button class="mode-btn" onclick="setMode('start')">🟢 Start</button>
+                <button class="mode-btn" onclick="setMode('end')">🔴 End</button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="findPath()">🔍 Find Shortest Path</button>
+                <button class="btn btn-secondary" onclick="clearMaze()">🗑️ Clear Maze</button>
+                <button class="btn btn-secondary" onclick="clearPath()">🧹 Clear Path</button>
+                <button class="btn btn-secondary" onclick="randomMaze()">🎲 Random Maze</button>
+            </div>
+
+            <div class="info">
+                <p><strong>Start:</strong> <span id="startInfo">Not set</span></p>
+                <p><strong>End:</strong> <span id="endInfo">Not set</span></p>
+                <p><strong>Path Length:</strong> <span id="pathLengthInfo">-</span></p>
+                <p id="message"></p>
+            </div>
+        </div>
+
+        <div class="canvas">
+            <div id="mazeGrid" class="maze-grid"></div>
+        </div>
+    </div>
+
+    <script src="mazeEditorScript.js"></script>
+</body>
+</html>

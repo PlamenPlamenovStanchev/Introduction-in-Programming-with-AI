@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sort Products Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-section h2 {
+            color: #333;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .product-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        button.remove {
+            background: #e74c3c;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        button.remove:hover {
+            background: #c0392b;
+        }
+
+        button.clear {
+            background: #95a5a6;
+        }
+
+        button.clear:hover {
+            background: #7f8c8d;
+        }
+
+        .product-list {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 150px;
+            background: #f9f9f9;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            border-left: 4px solid #667eea;
+        }
+
+        .product-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .empty-message {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .format-options {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .format-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="radio"] {
+            cursor: pointer;
+        }
+
+        label {
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+        }
+
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .output-section h2 {
+            color: #333;
+            font-size: 20px;
+            border-bottom: 2px solid #764ba2;
+            padding-bottom: 10px;
+        }
+
+        .output-box {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background: #f9f9f9;
+            min-height: 200px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #333;
+        }
+
+        .output-box.html {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .copy-button {
+            align-self: flex-start;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .status-message {
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-message.success {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-message.info {
+            background: #d6eaf8;
+            color: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📦 Sort Products Visualization</h1>
+            <p>Add products and see them sorted alphabetically in different formats</p>
+        </header>
+
+        <div class="content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2>Add Products</h2>
+                
+                <div class="product-input-group">
+                    <input type="text" id="productInput" placeholder="Enter product name" onkeypress="handleKeyPress(event)">
+                    <button onclick="addProduct()">Add</button>
+                </div>
+
+                <div class="format-options">
+                    <div class="format-option">
+                        <input type="radio" id="textFormat" name="format" value="text" checked>
+                        <label for="textFormat">Text Format</label>
+                    </div>
+                    <div class="format-option">
+                        <input type="radio" id="htmlFormat" name="format" value="html">
+                        <label for="htmlFormat">HTML Format</label>
+                    </div>
+                </div>
+
+                <div id="productListContainer" class="product-list">
+                    <div class="empty-message">No products added yet</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button onclick="sortAndDisplay()">Sort Products</button>
+                    <button class="clear" onclick="clearProducts()">Clear All</button>
+                </div>
+
+                <div id="statusMessage" class="status-message"></div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-section">
+                <h2>Output</h2>
+                <button class="copy-button" onclick="copyOutput()">📋 Copy Output</button>
+                <div id="outputBox" class="output-box">Click "Sort Products" to see the result here</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let products = [];
+
+        function sortProducts(arr, formatAsHTML = false) {
+            // Input validation
+            if (arr === null || arr === undefined) {
+                console.error('Error: Input cannot be null or undefined');
+                return '';
+            }
+            
+            if (!Array.isArray(arr)) {
+                console.error('Error: Input must be an array');
+                return '';
+            }
+            
+            if (arr.length === 0) {
+                return '';
+            }
+            
+            // Validate all elements are strings
+            for (let i = 0; i < arr.length; i++) {
+                if (typeof arr[i] !== 'string' || arr[i].trim() === '') {
+                    console.error(`Error: Element at index ${i} is not a valid non-empty string`);
+                    return '';
+                }
+            }
+            
+            // Sort products alphabetically (case-insensitive)
+            let sorted = [...arr].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+            
+            // Format output
+            if (formatAsHTML) {
+                let htmlOutput = '<ol>\n';
+                for (let i = 0; i < sorted.length; i++) {
+                    htmlOutput += `  <li>${sorted[i]}</li>`;
+                    if (i < sorted.length - 1) {
+                        htmlOutput += '\n';
+                    }
+                }
+                htmlOutput += '\n</ol>';
+                return htmlOutput;
+            } else {
+                let textOutput = '';
+                for (let i = 0; i < sorted.length; i++) {
+                    textOutput += (i + 1) + '.' + sorted[i];
+                    if (i < sorted.length - 1) {
+                        textOutput += '\n';
+                    }
+                }
+                return textOutput;
+            }
+        }
+
+        function addProduct() {
+            const input = document.getElementById('productInput');
+            const value = input.value.trim();
+            
+            if (value === '') {
+                showStatus('Please enter a product name', 'info');
+                return;
+            }
+            
+            products.push(value);
+            input.value = '';
+            input.focus();
+            updateProductList();
+            showStatus(`"${value}" added successfully`, 'success');
+        }
+
+        function removeProduct(index) {
+            const removed = products[index];
+            products.splice(index, 1);
+            updateProductList();
+            showStatus(`"${removed}" removed`, 'info');
+        }
+
+        function updateProductList() {
+            const container = document.getElementById('productListContainer');
+            
+            if (products.length === 0) {
+                container.innerHTML = '<div class="empty-message">No products added yet</div>';
+                return;
+            }
+            
+            container.innerHTML = products.map((product, index) => `
+                <div class="product-item">
+                    <span>${product}</span>
+                    <button class="remove" onclick="removeProduct(${index})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function sortAndDisplay() {
+            if (products.length === 0) {
+                showStatus('Please add at least one product', 'info');
+                return;
+            }
+            
+            const formatAsHTML = document.getElementById('htmlFormat').checked;
+            const output = sortProducts(products, formatAsHTML);
+            const outputBox = document.getElementById('outputBox');
+            
+            outputBox.textContent = output;
+            outputBox.className = formatAsHTML ? 'output-box html' : 'output-box';
+            showStatus('Products sorted successfully!', 'success');
+        }
+
+        function clearProducts() {
+            if (products.length === 0) {
+                showStatus('No products to clear', 'info');
+                return;
+            }
+            
+            products = [];
+            updateProductList();
+            document.getElementById('outputBox').textContent = 'Click "Sort Products" to see the result here';
+            showStatus('All products cleared', 'info');
+        }
+
+        function copyOutput() {
+            const outputBox = document.getElementById('outputBox');
+            const text = outputBox.textContent;
+            
+            if (text === 'Click "Sort Products" to see the result here') {
+                showStatus('Nothing to copy. Sort products first!', 'info');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showStatus('Output copied to clipboard!', 'success');
+            }).catch(() => {
+                showStatus('Failed to copy', 'info');
+            });
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                addProduct();
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message show ${type}`;
+            
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Focus on input on page load
+        document.getElementById('productInput').focus();
+    </script>
+</body>
+</html>

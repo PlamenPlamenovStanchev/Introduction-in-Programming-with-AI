@@ -1,0 +1,567 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.tabs-nav {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 2px solid #e0e0e0;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 150px;
+    padding: 15px 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #666;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    font-size: 14px;
+}
+
+.tab-btn:hover {
+    background: #e8e8e8;
+    color: #333;
+}
+
+.tab-btn.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+    background: white;
+}
+
+.tabs-container {
+    padding: 40px;
+    min-height: 500px;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Split Layout for Locations and Sales */
+.split-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 20px;
+    min-height: 600px;
+}
+
+.split-left {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f9f9f9;
+    overflow-y: auto;
+}
+
+.split-right {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f9f9f9;
+    overflow-y: auto;
+}
+
+.location-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.location-item {
+    padding: 12px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.location-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.location-item.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.location-item-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.location-item-coords {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.location-item-sales {
+    font-size: 12px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background: #f0f0f0;
+}
+
+th {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+    background: #f9f9f9;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Button Styles */
+button {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #764ba2;
+}
+
+button.btn-secondary {
+    background: #95a5a6;
+}
+
+button.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+button.btn-danger {
+    background: #e74c3c;
+}
+
+button.btn-danger:hover {
+    background: #c0392b;
+}
+
+button.btn-success {
+    background: #27ae60;
+}
+
+button.btn-success:hover {
+    background: #229954;
+}
+
+/* Utility Classes */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f9f9f9;
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 40px 20px;
+    font-size: 16px;
+}
+
+.status-message {
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.status-message.show {
+    display: block;
+}
+
+.status-message.success {
+    background: #d5f4e6;
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.status-message.error {
+    background: #fadbd8;
+    color: #c0392b;
+    border: 1px solid #c0392b;
+}
+
+.warning {
+    background: #fef5e7;
+}
+
+/* Sales Table Styles */
+.filter-controls {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.sortable:hover {
+    background: #e8e8e8;
+}
+
+.table-info {
+    margin: 15px 0;
+    padding: 12px;
+    background: #e3f2fd;
+    border-left: 4px solid #667eea;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.totals-row {
+    background: #f0f0f0;
+    font-weight: bold;
+    border-top: 2px solid #667eea;
+}
+
+.totals-row td {
+    background: #f0f0f0;
+    padding: 15px 12px;
+}
+
+/* Reports Styling */
+.reports-container {
+    width: 100%;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #667eea;
+}
+
+.report-header h3 {
+    color: #333;
+    font-size: 22px;
+}
+
+.location-report {
+    margin-bottom: 40px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-left: 5px solid #667eea;
+    border-radius: 5px;
+}
+
+.location-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.location-header h4 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.location-coords {
+    color: #666;
+    font-size: 13px;
+    margin: 0;
+}
+
+.location-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.location-table thead {
+    background: #667eea;
+    color: white;
+}
+
+.location-table th {
+    color: white;
+    border: none;
+    padding: 10px;
+}
+
+.location-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.location-table tbody tr:hover {
+    background: #e8e8e8;
+}
+
+.location-totals {
+    background: #e3f2fd;
+    font-weight: bold;
+    border-top: 2px solid #667eea;
+}
+
+.location-totals td {
+    background: #e3f2fd;
+    padding: 12px 10px;
+}
+
+.grand-totals-section {
+    margin-top: 50px;
+    padding: 25px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    color: white;
+}
+
+.grand-totals-section h3 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.grand-totals-section h4 {
+    color: white;
+    font-size: 16px;
+}
+
+.totals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.total-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.total-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.total-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.product-totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.product-totals-table thead {
+    background: #333;
+}
+
+.product-totals-table th {
+    color: white;
+    padding: 12px;
+    border: none;
+    text-align: left;
+}
+
+.product-totals-table td {
+    color: #333;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.product-totals-table tbody tr:hover {
+    background: #f5f5f5;
+}
+
+@media print {
+    .report-header .action-buttons {
+        display: none;
+    }
+    
+    .tabs-nav,
+    header {
+        display: none;
+    }
+    
+    .tabs-container {
+        padding: 0;
+    }
+    
+    .location-report {
+        page-break-inside: avoid;
+    }
+}
+
+@media (max-width: 768px) {
+    .tabs-nav {
+        overflow-x: auto;
+    }
+
+    .tab-btn {
+        min-width: 120px;
+        font-size: 12px;
+    }
+
+    .tabs-container {
+        padding: 20px;
+    }
+
+    .split-layout {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}

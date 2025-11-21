@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polygon Editor with Point Testing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="polygonEditorStyles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="map-section">
+            <div class="map-header">🗺️ Polygon & Point Editor</div>
+            <div id="map"></div>
+        </div>
+
+        <div class="sidebar">
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('polygon')">🔷 Polygon</button>
+                <button class="tab-button" onclick="switchTab('testPoints')">✓ Test Points</button>
+            </div>
+
+            <!-- Polygon Tab -->
+            <div id="polygonTab" class="tab-content active">
+                <div class="sidebar-header">📍 Polygon Points</div>
+                
+                <div class="points-table">
+                    <table id="polygonTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="polygonBody">
+                            <tr>
+                                <td colspan="4" class="empty-message">No points added yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="status" id="polygonStatus">Points: 0</div>
+                    <button class="action-button" onclick="viewPolygonAsArray()">📋 View as Array</button>
+                    <button class="action-button secondary" onclick="clearPolygon()">🗑️ Clear All</button>
+                </div>
+            </div>
+
+            <!-- Test Points Tab -->
+            <div id="testPointsTab" class="tab-content">
+                <div class="sidebar-header">✓ Test Points</div>
+                
+                <div class="points-table">
+                    <table id="testPointsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Status</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testPointsBody">
+                            <tr>
+                                <td colspan="5" class="empty-message">No test points added yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="status" id="testPointsStatus">Points: 0</div>
+                    <button class="action-button secondary" onclick="clearTestPoints()">🗑️ Clear All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JSON View Modal -->
+    <div id="jsonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Polygon as JSON Array</div>
+            <div class="json-output" id="jsonOutput"></div>
+            <div class="modal-buttons">
+                <button onclick="copyToClipboard()">📋 Copy</button>
+                <button class="secondary" onclick="closeJsonModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="polygonEditorScript.js"></script>
+</body>
+</html>

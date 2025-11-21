@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Occurrences Histogram</title>
+    <link rel="stylesheet" href="wordOccurrencesStyles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Word Occurrences Histogram</h1>
+            <p>Analyze text and visualize word frequency distribution</p>
+        </header>
+
+        <div class="content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2>Input Text</h2>
+                <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+
+                <div class="action-buttons">
+                    <button onclick="analyzeText()">Analyze Text</button>
+                    <button class="clear" onclick="clearAll()">Clear</button>
+                </div>
+
+                <div id="statusMessage" class="status-message"></div>
+
+                <div class="stats-summary" id="statsSummary" style="display: none;">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalWords">0</div>
+                        <div class="stat-label">Total Words</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="uniqueWords">0</div>
+                        <div class="stat-label">Unique Words</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="mostFrequent">-</div>
+                        <div class="stat-label">Most Frequent</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histogram Section -->
+            <div class="histogram-section">
+                <h2>Word Frequency Histogram</h2>
+                <div class="histogram-container" id="histogramContainer">
+                    <div class="empty-message">Analyze text to see histogram</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function countWordOccurences(text) {
+            // Input validation
+            if (text === null || text === undefined) {
+                return {};
+            }
+            
+            if (typeof text !== 'string') {
+                return {};
+            }
+            
+            if (text.trim() === '') {
+                return {};
+            }
+            
+            // Convert to lowercase and extract words (only letters)
+            let words = text.toLowerCase().split(/[^a-z]+/).filter(word => word.length > 0);
+            
+            // Count occurrences
+            let wordCount = {};
+            for (let word of words) {
+                wordCount[word] = (wordCount[word] || 0) + 1;
+            }
+            
+            return wordCount;
+        }
+
+        function analyzeText() {
+            const textInput = document.getElementById('textInput');
+            const text = textInput.value.trim();
+            
+            if (text === '') {
+                showStatus('Please enter some text to analyze', 'info');
+                return;
+            }
+            
+            // Count words
+            let wordCount = countWordOccurences(text);
+            
+            if (Object.keys(wordCount).length === 0) {
+                showStatus('No valid words found in the text', 'error');
+                return;
+            }
+            
+            // Convert to array and sort
+            let wordPairs = Object.entries(wordCount);
+            wordPairs.sort((a, b) => {
+                if (b[1] !== a[1]) {
+                    return b[1] - a[1];
+                }
+                return a[0].localeCompare(b[0]);
+            });
+            
+            // Calculate total words
+            const totalWords = text.toLowerCase().split(/[^a-z]+/).filter(w => w.length > 0).length;
+            
+            // Display histogram
+            displayHistogram(wordPairs, totalWords);
+            showStatus('Text analyzed successfully!', 'success');
+        }
+
+        function displayHistogram(wordPairs, totalWords) {
+            const container = document.getElementById('histogramContainer');
+            
+            if (!wordPairs || wordPairs.length === 0) {
+                container.innerHTML = '<div class="empty-message">No data to display</div>';
+                return;
+            }
+            
+            // Find max count for scaling
+            const maxCount = Math.max(...wordPairs.map(p => p[1]));
+            
+            // Generate histogram bars
+            let html = '';
+            for (let [word, count] of wordPairs) {
+                // Calculate percentage relative to max count
+                const percentage = (count / maxCount) * 100;
+                
+                html += `
+                    <div class="histogram-bar-wrapper">
+                        <div class="word-label" title="${word}">${word}</div>
+                        <div class="bar-container">
+                            <div class="bar" style="width: ${percentage}%;" title="${word}: ${count} times">
+                                <span>${count}</span>
+                            </div>
+                        </div>
+                        <div class="count-label">${count}x</div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            // Update stats
+            updateStats(wordPairs, totalWords);
+        }
+
+        function updateStats(wordPairs, totalWords) {
+            const statsSummary = document.getElementById('statsSummary');
+            const totalWordsEl = document.getElementById('totalWords');
+            const uniqueWordsEl = document.getElementById('uniqueWords');
+            const mostFrequentEl = document.getElementById('mostFrequent');
+            
+            totalWordsEl.textContent = totalWords;
+            uniqueWordsEl.textContent = wordPairs.length;
+            
+            if (wordPairs.length > 0) {
+                const mostFrequent = wordPairs[0][0];
+                const count = wordPairs[0][1];
+                mostFrequentEl.textContent = `${mostFrequent} (${count}x)`;
+            }
+            
+            statsSummary.style.display = 'grid';
+        }
+
+        function clearAll() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('histogramContainer').innerHTML = '<div class="empty-message">Analyze text to see histogram</div>';
+            document.getElementById('statsSummary').style.display = 'none';
+            showStatus('Text cleared', 'info');
+            document.getElementById('textInput').focus();
+        }
+
+        function showStatus(message, type) {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message show ${type}`;
+            
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Focus on textarea on page load
+        document.getElementById('textInput').focus();
+    </script>
+</body>
+</html>
