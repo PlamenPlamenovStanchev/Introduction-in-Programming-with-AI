@@ -31,9 +31,9 @@ function countWordOccurences(text) {
     // Sort by count (descending), then alphabetically
     wordPairs.sort((a, b) => {
         if (b[1] !== a[1]) {
-            return b[1] - a[1]; // Sort by count descending
+            return b[1] - a[1]; // Sort by count descending (higher counts first)
         }
-        return a[0].localeCompare(b[0]); // Sort alphabetically
+        return a[0].localeCompare(b[0]); // Sort alphabetically (a-z)
     });
     
     // Print results
@@ -43,7 +43,7 @@ function countWordOccurences(text) {
 }
 
 countWordOccurences("Here is the first sentence. Here is another sentence. And finally, the third sentence.");
-// Output:
+// Expected Output:
 // sentence -> 3 times
 // here -> 2 times
 // is -> 2 times
@@ -55,7 +55,7 @@ countWordOccurences("Here is the first sentence. Here is another sentence. And f
 // third -> 1 times
 
 countWordOccurences("Hello world! Hello everyone. Hello!");
-// Output:
+// Expected Output:
 // hello -> 3 times
 // everyone -> 1 times
 // world -> 1 times

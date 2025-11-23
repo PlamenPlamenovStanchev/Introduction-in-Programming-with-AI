@@ -1,78 +1,54 @@
 function processArrayCommands(input) {
-    // Input validation
-    if (input === null || input === undefined) {
-        console.error('Error: Input cannot be null or undefined');
-        return '';
-    }
+    // Step 1: Extract the initial array from the first element
+    // Use shift() to remove and get the first element, then convert to array of numbers
+    const commands = [...input]; // Create a copy to avoid modifying the original
+    const initialArrayString = commands.shift(); // Remove and get first element
+    const arr = initialArrayString.split(' ').map(num => parseInt(num)); // Convert to array of numbers
     
-    if (!Array.isArray(input)) {
-        console.error('Error: Input must be an array');
-        return '';
-    }
-    
-    if (input.length === 0) {
-        console.error('Error: Input array cannot be empty');
-        return '';
-    }
-    
-    // Parse initial array from first element
-    let arr = input[0].trim().split(/\s+/).map(x => {
-        const num = parseInt(x);
-        if (isNaN(num)) {
-            throw new Error(`Invalid number: ${x}`);
-        }
-        return num;
-    });
-    
-    // Process each command
-    for (let i = 1; i < input.length; i++) {
-        const command = input[i].trim();
-        const parts = command.split(/\s+/);
-        const action = parts[0];
+    // Step 2: Loop through each command and process it
+    for (let command of commands) {
+        // Destructure the command by splitting it into parts
+        const commandParts = command.split(' ');
+        const operation = commandParts[0]; // The command type (Add, Remove, etc.)
         
-        try {
-            if (action === 'Add') {
-                const num = parseInt(parts[1]);
-                if (isNaN(num)) {
-                    throw new Error(`Invalid number for Add command: ${parts[1]}`);
-                }
-                arr.push(num);
+        // Step 3: Use switch statement to handle different commands
+        switch (operation) {
+            case 'Add':
+                // Extract the number to add and use push() to add at the end
+                const numberToAdd = parseInt(commandParts[1]);
+                arr.push(numberToAdd);
+                break;
                 
-            } else if (action === 'Remove') {
-                const num = parseInt(parts[1]);
-                if (isNaN(num)) {
-                    throw new Error(`Invalid number for Remove command: ${parts[1]}`);
+            case 'Remove':
+                // Extract the number to remove and use filter() to remove all occurrences
+                const numberToRemove = parseInt(commandParts[1]);
+                // Filter keeps only elements that are NOT equal to the number to remove
+                for (let i = arr.length - 1; i >= 0; i--) {
+                    if (arr[i] === numberToRemove) {
+                        arr.splice(i, 1);
+                    }
                 }
-                arr = arr.filter(el => el !== num);
+                break;
                 
-            } else if (action === 'RemoveAt') {
-                const index = parseInt(parts[1]);
-                if (isNaN(index) || index < 0 || index >= arr.length) {
-                    throw new Error(`Invalid index for RemoveAt command: ${parts[1]}`);
-                }
-                arr.splice(index, 1);
+            case 'RemoveAt':
+                // Extract the index and use splice() to remove element at that position
+                const indexToRemove = parseInt(commandParts[1]);
+                arr.splice(indexToRemove, 1); // Remove 1 element at the specified index
+                break;
                 
-            } else if (action === 'Insert') {
-                const num = parseInt(parts[1]);
-                const index = parseInt(parts[2]);
-                if (isNaN(num)) {
-                    throw new Error(`Invalid number for Insert command: ${parts[1]}`);
-                }
-                if (isNaN(index) || index < 0 || index > arr.length) {
-                    throw new Error(`Invalid index for Insert command: ${parts[2]}`);
-                }
-                arr.splice(index, 0, num);
+            case 'Insert':
+                // Extract the number and index, use splice() to insert
+                const numberToInsert = parseInt(commandParts[1]);
+                const insertIndex = parseInt(commandParts[2]);
+                arr.splice(insertIndex, 0, numberToInsert); // Insert at index, remove 0 elements, add the number
+                break;
                 
-            } else {
-                throw new Error(`Unknown command: ${action}`);
-            }
-        } catch (error) {
-            console.error(`Error processing command "${command}": ${error.message}`);
-            return '';
+            default:
+                console.log(`Unknown command: ${operation}`);
         }
     }
     
-    // Return array as space-separated string
+    // Step 4: Return the manipulated array as a space-separated string
     return arr.join(' ');
 }
 
