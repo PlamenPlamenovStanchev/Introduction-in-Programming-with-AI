@@ -1,0 +1,84 @@
+<div class="tab-content my-company">
+    <h1>My Company</h1>
+    
+    <!-- View Mode -->
+    <div id="company-view" class="company-view">
+        <table class="company-table">
+            <tbody>
+                <tr>
+                    <th>Company Name</th>
+                    <td id="view-name"></td>
+                </tr>
+                <tr>
+                    <th>Company ID</th>
+                    <td id="view-id"></td>
+                </tr>
+                <tr>
+                    <th>Tax ID</th>
+                    <td id="view-taxId"></td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td id="view-address"></td>
+                </tr>
+                <tr>
+                    <th>Manager</th>
+                    <td id="view-manager"></td>
+                </tr>
+                <tr>
+                    <th>IBAN</th>
+                    <td id="view-iban"></td>
+                </tr>
+                <tr>
+                    <th>Default VAT Rate</th>
+                    <td id="view-vatRate"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="button-container">
+            <button id="edit-btn" class="btn btn-primary">Edit</button>
+        </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <div id="company-edit" class="company-edit" style="display: none;">
+        <form id="company-form">
+            <table class="company-table edit-table">
+                <tbody>
+                    <tr>
+                        <th><label for="edit-name">Company Name</label></th>
+                        <td><input type="text" id="edit-name" name="name" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit-id">Company ID</label></th>
+                        <td><input type="text" id="edit-id" name="id" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit-taxId">Tax ID</label></th>
+                        <td><input type="text" id="edit-taxId" name="taxId" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit-address">Address</label></th>
+                        <td><input type="text" id="edit-address" name="address" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit-manager">Manager</label></th>
+                        <td><input type="text" id="edit-manager" name="manager" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit-iban">IBAN</label></th>
+                        <td><input type="text" id="edit-iban" name="iban" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="edit-vatRate">Default VAT Rate (%)</label></th>
+                        <td><input type="number" id="edit-vatRate" name="defaultVatRate" min="0" max="100" step="0.1" required></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="button-container">
+                <button type="submit" class="btn btn-success">Save</button>
+                <button type="button" id="cancel-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

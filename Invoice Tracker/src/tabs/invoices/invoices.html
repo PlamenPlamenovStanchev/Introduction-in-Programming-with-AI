@@ -1,0 +1,160 @@
+<div class="tab-content invoices">
+    <div class="tab-header">
+        <h1>Invoices</h1>
+        <button id="add-invoice-btn" class="btn btn-primary">+ Add Invoice</button>
+    </div>
+    
+    <!-- Invoices Table -->
+    <div class="table-container">
+        <table class="data-table" id="invoices-table">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                    <th>Items</th>
+                    <th>Subtotal</th>
+                    <th>VAT</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="invoices-tbody">
+                <!-- Invoice rows will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add/Edit Invoice Modal -->
+    <div id="invoice-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Invoice</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <form id="invoice-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="invoice-id">Invoice Number</label>
+                        <input type="text" id="invoice-id" name="id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-date">Date</label>
+                        <input type="date" id="invoice-date" name="date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Client</label>
+                    <div class="client-selector">
+                        <input type="text" id="invoice-client-display" readonly placeholder="Click to select client...">
+                        <button type="button" id="select-client-btn" class="btn btn-secondary">Select</button>
+                    </div>
+                    <input type="hidden" id="invoice-client-id" name="clientId" required>
+                </div>
+                
+                <!-- Invoice Items Section -->
+                <div class="invoice-items-section">
+                    <div class="section-header">
+                        <h3>Invoice Items</h3>
+                        <button type="button" id="add-item-btn" class="btn btn-primary btn-sm">+ Add Item</button>
+                    </div>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>VAT %</th>
+                                <th>Subtotal</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-items-tbody">
+                            <!-- Item rows will be inserted here -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="totals-label">Subtotal:</td>
+                                <td id="items-subtotal" class="totals-value">0.00</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="totals-label">VAT:</td>
+                                <td id="items-vat" class="totals-value">0.00</td>
+                                <td></td>
+                            </tr>
+                            <tr class="total-row">
+                                <td colspan="4" class="totals-label">Total:</td>
+                                <td id="items-total" class="totals-value">0.00</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-success">Save Invoice</button>
+                    <button type="button" id="modal-cancel" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client Selection Modal -->
+    <div id="client-modal" class="modal" style="display: none;">
+        <div class="modal-overlay" id="client-modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Select Client</h2>
+                <button class="modal-close" id="client-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box">
+                    <input type="text" id="client-search" placeholder="Search clients...">
+                </div>
+                <div class="selection-list" id="client-list">
+                    <!-- Client items will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Selection Modal -->
+    <div id="product-modal" class="modal" style="display: none;">
+        <div class="modal-overlay" id="product-modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Select Product</h2>
+                <button class="modal-close" id="product-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box">
+                    <input type="text" id="product-search" placeholder="Search products...">
+                </div>
+                <div class="selection-list" id="product-list">
+                    <!-- Product items will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Confirm Delete</h2>
+                <button class="modal-close" id="delete-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete invoice "<span id="delete-invoice-id"></span>"?</p>
+                <p class="warning-text">This action cannot be undone.</p>
+            </div>
+            <div class="modal-buttons">
+                <button id="confirm-delete-btn" class="btn btn-danger">Delete</button>
+                <button id="cancel-delete-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

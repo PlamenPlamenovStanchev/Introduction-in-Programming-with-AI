@@ -1,0 +1,49 @@
+<div class="tab-content tracker">
+    <div class="tab-header">
+        <h1>Invoice Tracker</h1>
+        <div class="tracker-summary">
+            <div class="summary-item">
+                <span class="summary-label">Total Invoices:</span>
+                <span class="summary-value" id="total-invoices">0</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Paid:</span>
+                <span class="summary-value paid" id="paid-invoices">0</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Unpaid:</span>
+                <span class="summary-value unpaid" id="unpaid-invoices">0</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Unpaid Amount:</span>
+                <span class="summary-value unpaid" id="unpaid-amount">0.00</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filter Buttons -->
+    <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="paid">Paid</button>
+        <button class="filter-btn" data-filter="unpaid">Unpaid</button>
+    </div>
+    
+    <!-- Tracker Table -->
+    <div class="table-container">
+        <table class="data-table" id="tracker-table">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                    <th>Total Amount</th>
+                    <th>Paid</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tracker-tbody">
+                <!-- Invoice rows will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+</div>

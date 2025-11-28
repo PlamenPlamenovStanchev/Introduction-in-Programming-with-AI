@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice Tracker</title>
+  </head>
+  <body>
+    <div id="app">
+      <nav class="tabs-navigation">
+        <button class="tab-button active" data-tab="my-company">My Company</button>
+        <button class="tab-button" data-tab="clients">Clients</button>
+        <button class="tab-button" data-tab="products">Products</button>
+        <button class="tab-button" data-tab="invoices">Invoices</button>
+        <button class="tab-button" data-tab="tracker">Tracker</button>
+      </nav>
+      <main id="tab-content"></main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
