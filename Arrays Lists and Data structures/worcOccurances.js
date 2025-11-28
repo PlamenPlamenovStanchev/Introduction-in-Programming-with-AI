@@ -1,4 +1,9 @@
 function countWordOccurences(text) {
+    // Ensure input is a string
+    if(typeof text !== 'string') {
+        text = String(text);
+    }
+
     // Input validation
     if (text === null || text === undefined) {
         console.error('Error: Input cannot be null or undefined');
