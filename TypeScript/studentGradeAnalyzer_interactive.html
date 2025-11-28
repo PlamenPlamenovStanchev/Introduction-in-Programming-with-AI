@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .grading-scale {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .grading-scale h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .scale-items {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .scale-item {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .input-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .grades-input-container {
+            margin-bottom: 15px;
+        }
+        
+        .grade-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .grade-input-row input {
+            flex: 1;
+        }
+        
+        .grade-input-row .grade-number {
+            background: #667eea;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-grade-btn {
+            padding: 10px 15px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-grade-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .add-grade-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .add-grade-btn:hover {
+            background: #5568d3;
+        }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .analyze-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .student-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .pass-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1em;
+        }
+        
+        .pass-badge.passed {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .pass-badge.failed {
+            background: #f44336;
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 2em;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .grades-display {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .grades-display h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .grades-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .grade-badge {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+            border: 2px solid #e0e0e0;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .grade-badge.highest {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .summary-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #f44336;
+            font-weight: 600;
+            display: none;
+            margin-bottom: 20px;
+        }
+        
+        .error-message.active {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .preset-students {
+            margin-bottom: 30px;
+        }
+        
+        .preset-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .preset-btn {
+            padding: 15px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .preset-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .preset-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .grade-chart {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .grade-chart h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .chart-bar {
+            margin-bottom: 15px;
+        }
+        
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .chart-bar-container {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .chart-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .average-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #f44336;
+            z-index: 1;
+        }
+        
+        .average-label {
+            position: absolute;
+            top: -25px;
+            transform: translateX(-50%);
+            background: #f44336;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Student Grade Analyzer</h1>
+            <p>Analyze student performance with grades from 2 to 6</p>
+        </div>
+        
+        <div class="content">
+            <!-- Grading Scale -->
+            <div class="grading-scale">
+                <h3>📊 Grading Scale</h3>
+                <div class="scale-items">
+                    <div class="scale-item">2 - Poor</div>
+                    <div class="scale-item">3 - Fair</div>
+                    <div class="scale-item">4 - Good</div>
+                    <div class="scale-item">5 - Very Good</div>
+                    <div class="scale-item">6 - Excellent</div>
+                </div>
+            </div>
+            
+            <!-- Preset Students -->
+            <div class="preset-students">
+                <div class="preset-label">Quick Load Examples:</div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="loadPreset('Alice', [5, 5, 5, 6], 4)">
+                        <div class="preset-icon">✨</div>
+                        <div>Alice (Passed)</div>
+                    </button>
+                    <button class="preset-btn" onclick="loadPreset('Eve', [2], 3)">
+                        <div class="preset-icon">📉</div>
+                        <div>Eve (Failed)</div>
+                    </button>
+                    <button class="preset-btn" onclick="loadPreset('Bob', [6, 6, 6], 5)">
+                        <div class="preset-icon">🌟</div>
+                        <div>Bob (Perfect)</div>
+                    </button>
+                    <button class="preset-btn" onclick="loadPreset('Charlie', [4, 4, 4, 4], 4)">
+                        <div class="preset-icon">⚖️</div>
+                        <div>Charlie (Borderline)</div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Enter Student Information</h2>
+                
+                <div class="form-group">
+                    <label for="studentName">Student Name:</label>
+                    <input type="text" id="studentName" placeholder="Enter student name..." />
+                </div>
+                
+                <div class="form-group">
+                    <label>Grades (2-6):</label>
+                    <div class="grades-input-container" id="gradesContainer">
+                        <div class="grade-input-row">
+                            <div class="grade-number">Grade 1</div>
+                            <input type="number" class="grade-input" placeholder="Enter grade (2-6)" min="2" max="6" />
+                            <button class="remove-grade-btn" onclick="removeGrade(this)">❌</button>
+                        </div>
+                    </div>
+                    <button class="add-grade-btn" onclick="addGrade()">➕ Add Grade</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="minPassingGrade">Minimum Passing Grade:</label>
+                    <input type="number" id="minPassingGrade" placeholder="Enter minimum passing grade (2-6)" min="2" max="6" value="4" />
+                </div>
+                
+                <button class="analyze-btn" onclick="analyzeGrades()">📊 Analyze Grades</button>
+            </div>
+            
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage"></div>
+            
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="student-name" id="resultStudentName">-</div>
+                        <div class="pass-badge" id="passBadge">-</div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Average Grade</div>
+                            <div class="stat-value" id="averageGrade">0.00</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Highest Grade</div>
+                            <div class="stat-value" id="highestGrade">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Total Grades</div>
+                            <div class="stat-value" id="totalGrades">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grades-display">
+                        <h3>All Grades:</h3>
+                        <div class="grades-list" id="gradesList"></div>
+                    </div>
+                    
+                    <div class="grade-chart">
+                        <h3>Grade Visualization:</h3>
+                        <div id="gradeChart"></div>
+                    </div>
+                    
+                    <div class="summary-box">
+                        <h3>📝 Summary:</h3>
+                        <div id="summaryText">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let gradeCounter = 1;
+        
+        function addGrade() {
+            gradeCounter++;
+            const container = document.getElementById('gradesContainer');
+            const div = document.createElement('div');
+            div.className = 'grade-input-row';
+            div.innerHTML = `
+                <div class="grade-number">Grade ${gradeCounter}</div>
+                <input type="number" class="grade-input" placeholder="Enter grade (2-6)" min="2" max="6" />
+                <button class="remove-grade-btn" onclick="removeGrade(this)">❌</button>
+            `;
+            container.appendChild(div);
+        }
+        
+        function removeGrade(button) {
+            const container = document.getElementById('gradesContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+                updateGradeNumbers();
+            } else {
+                showError('You must have at least one grade!');
+            }
+        }
+        
+        function updateGradeNumbers() {
+            const rows = document.querySelectorAll('.grade-input-row');
+            rows.forEach((row, index) => {
+                row.querySelector('.grade-number').textContent = `Grade ${index + 1}`;
+            });
+            gradeCounter = rows.length;
+        }
+        
+        function loadPreset(name, grades, minGrade) {
+            document.getElementById('studentName').value = name;
+            document.getElementById('minPassingGrade').value = minGrade;
+            
+            const container = document.getElementById('gradesContainer');
+            container.innerHTML = '';
+            gradeCounter = 0;
+            
+            grades.forEach(grade => {
+                gradeCounter++;
+                const div = document.createElement('div');
+                div.className = 'grade-input-row';
+                div.innerHTML = `
+                    <div class="grade-number">Grade ${gradeCounter}</div>
+                    <input type="number" class="grade-input" placeholder="Enter grade (2-6)" min="2" max="6" value="${grade}" />
+                    <button class="remove-grade-btn" onclick="removeGrade(this)">❌</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            
+            setTimeout(() => {
+                errorDiv.classList.remove('active');
+            }, 5000);
+        }
+        
+        function analyzeGrades() {
+            // Hide previous error and results
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            
+            // Get student name
+            const studentName = document.getElementById('studentName').value.trim();
+            
+            // Validate student name
+            if (!studentName) {
+                showError('Student name is missing!');
+                return;
+            }
+            
+            // Get all grades
+            const gradeInputs = document.querySelectorAll('.grade-input');
+            const grades = Array.from(gradeInputs)
+                .map(input => parseFloat(input.value))
+                .filter(val => !isNaN(val));
+            
+            // Validate grades array
+            if (grades.length === 0) {
+                showError('Grades array cannot be empty!');
+                return;
+            }
+            
+            // Validate each grade is in range [2-6]
+            for (const grade of grades) {
+                if (grade < 2 || grade > 6) {
+                    showError(`Invalid grade: ${grade}. Grades must be between 2 and 6.`);
+                    return;
+                }
+            }
+            
+            // Get minimum passing grade
+            const minPassingGrade = parseFloat(document.getElementById('minPassingGrade').value);
+            
+            if (isNaN(minPassingGrade) || minPassingGrade < 2 || minPassingGrade > 6) {
+                showError('Minimum passing grade must be between 2 and 6!');
+                return;
+            }
+            
+            // Calculate average
+            const sum = grades.reduce((acc, grade) => acc + grade, 0);
+            const averageGrade = sum / grades.length;
+            
+            // Find highest grade
+            const highestGrade = Math.max(...grades);
+            
+            // Determine if passed
+            const passed = averageGrade >= minPassingGrade;
+            
+            // Generate summary
+            let summary = `${studentName}'s average grade is ${averageGrade.toFixed(2)}. `;
+            if (passed) {
+                summary += `Excellent! The student passed with a highest grade of ${highestGrade}.`;
+            } else {
+                summary += `Unfortunately, the student did not meet the minimum grade of ${minPassingGrade}.`;
+            }
+            
+            // Display results
+            document.getElementById('resultStudentName').textContent = studentName;
+            document.getElementById('averageGrade').textContent = averageGrade.toFixed(2);
+            document.getElementById('highestGrade').textContent = highestGrade;
+            document.getElementById('totalGrades').textContent = grades.length;
+            document.getElementById('summaryText').textContent = summary;
+            
+            // Update pass/fail badge
+            const passBadge = document.getElementById('passBadge');
+            if (passed) {
+                passBadge.textContent = '✓ PASSED';
+                passBadge.className = 'pass-badge passed';
+            } else {
+                passBadge.textContent = '✗ FAILED';
+                passBadge.className = 'pass-badge failed';
+            }
+            
+            // Display grades list
+            const gradesList = document.getElementById('gradesList');
+            gradesList.innerHTML = '';
+            grades.forEach(grade => {
+                const badge = document.createElement('div');
+                badge.className = 'grade-badge';
+                if (grade === highestGrade) {
+                    badge.classList.add('highest');
+                }
+                badge.textContent = grade;
+                gradesList.appendChild(badge);
+            });
+            
+            // Create grade chart
+            const gradeChart = document.getElementById('gradeChart');
+            gradeChart.innerHTML = '';
+            const maxGrade = 6;
+            const averagePercent = (averageGrade / maxGrade) * 100;
+            
+            grades.forEach((grade, index) => {
+                const percent = (grade / maxGrade) * 100;
+                const chartBar = document.createElement('div');
+                chartBar.className = 'chart-bar';
+                chartBar.innerHTML = `
+                    <div class="chart-label">
+                        <span>Grade ${index + 1}</span>
+                        <span>${grade}</span>
+                    </div>
+                    <div class="chart-bar-container">
+                        <div class="chart-bar-fill" style="width: ${percent}%">${grade}</div>
+                        ${index === 0 ? `
+                            <div class="average-line" style="left: ${averagePercent}%">
+                                <div class="average-label">Avg: ${averageGrade.toFixed(2)}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                gradeChart.appendChild(chartBar);
+            });
+            
+            // Show results
+            document.getElementById('resultsSection').classList.add('active');
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Log to console (like TypeScript function)
+            console.log({
+                studentName: studentName,
+                averageGrade: averageGrade,
+                highestGrade: highestGrade,
+                passed: passed,
+                summary: summary
+            });
+        }
+    </script>
+</body>
+</html>

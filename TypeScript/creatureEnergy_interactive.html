@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Creature Energy Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .input-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .energy-levels-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .energy-levels-input input {
+            flex: 1;
+        }
+        
+        .add-level-btn,
+        .remove-level-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .add-level-btn {
+            background: #667eea;
+            color: white;
+        }
+        
+        .add-level-btn:hover {
+            background: #5568d3;
+        }
+        
+        .remove-level-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .remove-level-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .energy-inputs-container {
+            margin-bottom: 15px;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            display: none;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #667eea;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .result-label {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            color: #333;
+            font-size: 1.2em;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .average-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .average-label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .average-value {
+            font-size: 3em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .energy-bars {
+            margin-top: 20px;
+        }
+        
+        .energy-bar-item {
+            margin-bottom: 15px;
+        }
+        
+        .energy-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 0.9em;
+        }
+        
+        .energy-bar-container {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .energy-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .preset-creatures {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .preset-btn {
+            padding: 15px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .preset-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .preset-label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .creature-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated stars background -->
+    <div class="stars" id="starsContainer"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🌌 Galactic Creature Energy Calculator</h1>
+            <p>Calculate the average energy levels of cosmic creatures</p>
+        </div>
+        
+        <div class="content">
+            <!-- Preset Creatures -->
+            <div class="preset-label">Quick Select:</div>
+            <div class="preset-creatures">
+                <button class="preset-btn" onclick="loadPreset('Zorblax', [35, 42, 50, 29])">
+                    <div class="creature-icon">👾</div>
+                    <div>Zorblax</div>
+                </button>
+                <button class="preset-btn" onclick="loadPreset('Lumivex', [75, 80, 90])">
+                    <div class="creature-icon">✨</div>
+                    <div>Lumivex</div>
+                </button>
+                <button class="preset-btn" onclick="loadPreset('Stellaris', [100, 95, 88, 92, 97])">
+                    <div class="creature-icon">⭐</div>
+                    <div>Stellaris</div>
+                </button>
+                <button class="preset-btn" onclick="loadPreset('Nebula', [45, 50, 55, 60, 65, 70])">
+                    <div class="creature-icon">🌠</div>
+                    <div>Nebula</div>
+                </button>
+            </div>
+            
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Enter Creature Data</h2>
+                
+                <div class="form-group">
+                    <label for="creatureName">Creature Name:</label>
+                    <input type="text" id="creatureName" placeholder="Enter creature name..." />
+                </div>
+                
+                <div class="form-group">
+                    <label>Energy Levels:</label>
+                    <div class="energy-inputs-container" id="energyInputs">
+                        <div class="energy-levels-input">
+                            <input type="number" class="energy-level" placeholder="Energy level..." min="0" />
+                            <button class="remove-level-btn" onclick="removeEnergyInput(this)">❌</button>
+                        </div>
+                    </div>
+                    <button class="add-level-btn" onclick="addEnergyInput()">➕ Add Energy Level</button>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateEnergy()">🚀 Calculate Average Energy</button>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Calculation Results</h2>
+                
+                <div class="result-card">
+                    <div class="result-label">Creature Name:</div>
+                    <div class="result-value" id="resultName">-</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-label">Energy Levels:</div>
+                    <div class="result-value" id="resultLevels">-</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-label">Energy Distribution:</div>
+                    <div class="energy-bars" id="energyBars"></div>
+                </div>
+                
+                <div class="average-display">
+                    <div class="average-label">Average Energy Level</div>
+                    <div class="average-value" id="averageValue">0.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Create animated stars
+        function createStars() {
+            const starsContainer = document.getElementById('starsContainer');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+        
+        // Add initial energy input
+        function addEnergyInput() {
+            const container = document.getElementById('energyInputs');
+            const div = document.createElement('div');
+            div.className = 'energy-levels-input';
+            div.innerHTML = `
+                <input type="number" class="energy-level" placeholder="Energy level..." min="0" />
+                <button class="remove-level-btn" onclick="removeEnergyInput(this)">❌</button>
+            `;
+            container.appendChild(div);
+        }
+        
+        function removeEnergyInput(button) {
+            const container = document.getElementById('energyInputs');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            } else {
+                alert('You must have at least one energy level!');
+            }
+        }
+        
+        function loadPreset(name, levels) {
+            document.getElementById('creatureName').value = name;
+            const container = document.getElementById('energyInputs');
+            container.innerHTML = '';
+            
+            levels.forEach(level => {
+                const div = document.createElement('div');
+                div.className = 'energy-levels-input';
+                div.innerHTML = `
+                    <input type="number" class="energy-level" placeholder="Energy level..." min="0" value="${level}" />
+                    <button class="remove-level-btn" onclick="removeEnergyInput(this)">❌</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function calculateEnergy() {
+            const name = document.getElementById('creatureName').value;
+            const energyInputs = document.querySelectorAll('.energy-level');
+            const energyLevels = Array.from(energyInputs)
+                .map(input => parseFloat(input.value))
+                .filter(val => !isNaN(val) && val >= 0);
+            
+            if (!name) {
+                alert('Please enter a creature name!');
+                return;
+            }
+            
+            if (energyLevels.length === 0) {
+                alert('Please enter at least one valid energy level!');
+                return;
+            }
+            
+            // Calculate average
+            const sum = energyLevels.reduce((acc, level) => acc + level, 0);
+            const average = sum / energyLevels.length;
+            
+            // Display results
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultLevels').textContent = `[${energyLevels.join(', ')}]`;
+            document.getElementById('averageValue').textContent = average.toFixed(2);
+            
+            // Create energy bars
+            const maxEnergy = Math.max(...energyLevels);
+            const energyBarsContainer = document.getElementById('energyBars');
+            energyBarsContainer.innerHTML = '';
+            
+            energyLevels.forEach((level, index) => {
+                const percentage = (level / maxEnergy) * 100;
+                const barItem = document.createElement('div');
+                barItem.className = 'energy-bar-item';
+                barItem.innerHTML = `
+                    <div class="energy-bar-label">
+                        <span>Activity ${index + 1}</span>
+                        <span>${level}</span>
+                    </div>
+                    <div class="energy-bar-container">
+                        <div class="energy-bar-fill" style="width: ${percentage}%">
+                            ${level}
+                        </div>
+                    </div>
+                `;
+                energyBarsContainer.appendChild(barItem);
+            });
+            
+            // Show results section with animation
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.classList.add('active');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Log to console (like the TypeScript function)
+            console.log(`Creature: ${name}`);
+            console.log(`Energy Levels: [${energyLevels.join(', ')}]`);
+            console.log(`Average Energy Level: ${average.toFixed(2)}`);
+            console.log('');
+        }
+    </script>
+</body>
+</html>

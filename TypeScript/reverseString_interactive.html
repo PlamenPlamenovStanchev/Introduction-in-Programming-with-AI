@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive String Reverser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 50px 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input[type="text"]::placeholder {
+            color: #999;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .reverse-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .reverse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .reverse-btn:active {
+            transform: translateY(0);
+        }
+        
+        .clear-btn {
+            background: #f5f5f5;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .clear-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .output-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .output-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .output-box {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #333;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .output-box.empty {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.5em;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .features {
+            background: #e8eaf6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .features h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .features ul {
+            list-style: none;
+            color: #555;
+        }
+        
+        .features li {
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+        
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .copy-feedback {
+            display: none;
+            color: #388e3c;
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 String Reverser</h1>
+            <p>Enter any text and reverse it instantly</p>
+        </div>
+        
+        <div class="input-section">
+            <label for="inputText">Input Text:</label>
+            <input 
+                type="text" 
+                id="inputText" 
+                placeholder="Type any string here..." 
+                onkeyup="reverseString()"
+                autofocus
+            >
+        </div>
+        
+        <div class="button-group">
+            <button class="reverse-btn" onclick="reverseString()">🔄 Reverse</button>
+            <button class="clear-btn" onclick="clearAll()">🗑️ Clear</button>
+        </div>
+        
+        <div class="output-section">
+            <div class="output-title">Reversed String:</div>
+            <div class="output-box empty" id="outputBox">
+                Your reversed text will appear here
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard()" id="copyBtn" style="display: none;">📋 Copy Result</button>
+            <div class="copy-feedback" id="copyFeedback">Copied to clipboard!</div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Input Length</div>
+                <div class="stat-value" id="inputLength">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Output Length</div>
+                <div class="stat-value" id="outputLength">0</div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>✨ Features:</h3>
+            <ul>
+                <li>Real-time string reversal as you type</li>
+                <li>Works with any type of string (numbers, special characters, etc.)</li>
+                <li>Shows character count for both input and output</li>
+                <li>Copy reversed text to clipboard with one click</li>
+                <li>Clear button to reset all fields instantly</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function reverseString() {
+            const inputText = document.getElementById('inputText').value;
+            const outputBox = document.getElementById('outputBox');
+            const copyBtn = document.getElementById('copyBtn');
+            const copyFeedback = document.getElementById('copyFeedback');
+            
+            if (inputText === '') {
+                outputBox.textContent = 'Your reversed text will appear here';
+                outputBox.classList.add('empty');
+                copyBtn.style.display = 'none';
+                copyFeedback.style.display = 'none';
+                document.getElementById('inputLength').textContent = '0';
+                document.getElementById('outputLength').textContent = '0';
+                return;
+            }
+            
+            // Reverse the string
+            const reversedText = inputText.split('').reverse().join('');
+            
+            // Display the reversed text
+            outputBox.textContent = reversedText;
+            outputBox.classList.remove('empty');
+            copyBtn.style.display = 'block';
+            copyFeedback.style.display = 'none';
+            
+            // Update character counts
+            document.getElementById('inputLength').textContent = inputText.length;
+            document.getElementById('outputLength').textContent = reversedText.length;
+        }
+        
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputBox').textContent = 'Your reversed text will appear here';
+            document.getElementById('outputBox').classList.add('empty');
+            document.getElementById('copyBtn').style.display = 'none';
+            document.getElementById('copyFeedback').style.display = 'none';
+            document.getElementById('inputLength').textContent = '0';
+            document.getElementById('outputLength').textContent = '0';
+            document.getElementById('inputText').focus();
+        }
+        
+        function copyToClipboard() {
+            const outputBox = document.getElementById('outputBox');
+            const text = outputBox.textContent;
+            const copyFeedback = document.getElementById('copyFeedback');
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(text).then(() => {
+                // Show feedback
+                copyFeedback.style.display = 'block';
+                setTimeout(() => {
+                    copyFeedback.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+    </script>
+</body>
+</html>

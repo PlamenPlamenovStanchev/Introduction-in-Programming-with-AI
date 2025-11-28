@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystic Potion Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c003e 0%, #5b0a91 50%, #8e2de2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Magical particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translateY(-20px) translateX(10px);
+                opacity: 0.8;
+            }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "✨";
+            position: absolute;
+            font-size: 10em;
+            opacity: 0.1;
+            top: -20px;
+            right: -20px;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .potion-type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .potion-type-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .potion-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(142, 45, 226, 0.3);
+        }
+        
+        .potion-type-card.active {
+            border-color: #8e2de2;
+            background: linear-gradient(135deg, #e8d5ff 0%, #d4b5ff 100%);
+        }
+        
+        .potion-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+        
+        .potion-type-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #8e2de2;
+            margin-bottom: 10px;
+        }
+        
+        .potion-type-desc {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .input-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+            display: none;
+        }
+        
+        .input-section.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #8e2de2;
+            box-shadow: 0 0 0 3px rgba(142, 45, 226, 0.1);
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(142, 45, 226, 0.4);
+        }
+        
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .potion-bottle {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .bottle-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .bottle-svg {
+            width: 200px;
+            height: 250px;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        }
+        
+        .potion-liquid {
+            animation: bubbles 2s ease-in-out infinite;
+        }
+        
+        @keyframes bubbles {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .sparkles {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { 
+                opacity: 0;
+                transform: translateX(-50%) scale(0.5);
+            }
+            50% { 
+                opacity: 1;
+                transform: translateX(-50%) scale(1.2);
+            }
+        }
+        
+        .result-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #8e2de2;
+            margin-bottom: 20px;
+        }
+        
+        .potion-name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #8e2de2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .effect-box {
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            text-align: center;
+            line-height: 1.6;
+            box-shadow: 0 10px 30px rgba(142, 45, 226, 0.3);
+        }
+        
+        .potion-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            color: #8e2de2;
+            font-weight: bold;
+            font-size: 2em;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .preset-potions {
+            margin-bottom: 30px;
+        }
+        
+        .preset-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .preset-btn {
+            padding: 15px;
+            background: white;
+            border: 2px solid #8e2de2;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: #8e2de2;
+        }
+        
+        .preset-btn:hover {
+            background: #8e2de2;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.3);
+        }
+        
+        .preset-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .create-new-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #8e2de2;
+            border: 2px solid #8e2de2;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .create-new-btn:hover {
+            background: #8e2de2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Magical particles background -->
+    <div class="particles" id="particlesContainer"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Mystic Potion Calculator</h1>
+            <p>Discover the magical effects of your potions</p>
+        </div>
+        
+        <div class="content">
+            <!-- Preset Potions -->
+            <div class="preset-potions">
+                <div class="preset-label">Quick Select Potion:</div>
+                <div class="preset-grid">
+                    <button class="preset-btn" onclick="loadPreset('healing', 'Elixir of Life', 50)">
+                        <div class="preset-icon">❤️</div>
+                        <div>Elixir of Life</div>
+                    </button>
+                    <button class="preset-btn" onclick="loadPreset('healing', 'Minor Heal', 25)">
+                        <div class="preset-icon">💊</div>
+                        <div>Minor Heal</div>
+                    </button>
+                    <button class="preset-btn" onclick="loadPreset('enhancement', 'Strength Brew', 25)">
+                        <div class="preset-icon">💪</div>
+                        <div>Strength Brew</div>
+                    </button>
+                    <button class="preset-btn" onclick="loadPreset('enhancement', 'Agility Elixir', 30)">
+                        <div class="preset-icon">⚡</div>
+                        <div>Agility Elixir</div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Potion Type Selector -->
+            <div class="potion-type-selector">
+                <div class="potion-type-card" onclick="selectPotionType('healing')">
+                    <div class="potion-icon">❤️</div>
+                    <div class="potion-type-title">Healing Potion</div>
+                    <div class="potion-type-desc">Restores health points</div>
+                </div>
+                <div class="potion-type-card" onclick="selectPotionType('enhancement')">
+                    <div class="potion-icon">✨</div>
+                    <div class="potion-type-title">Enhancement Potion</div>
+                    <div class="potion-type-desc">Enhances abilities</div>
+                </div>
+            </div>
+            
+            <!-- Healing Potion Input -->
+            <div class="input-section" id="healingInput">
+                <h2 style="color: #8e2de2; margin-bottom: 20px;">❤️ Healing Potion</h2>
+                
+                <div class="form-group">
+                    <label for="healingName">Potion Name:</label>
+                    <input type="text" id="healingName" placeholder="Enter potion name..." />
+                </div>
+                
+                <div class="form-group">
+                    <label for="healingAmount">Healing Amount (Health Points):</label>
+                    <input type="number" id="healingAmount" placeholder="Enter healing amount..." min="1" />
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateEffect('healing')">🧪 Calculate Effect</button>
+            </div>
+            
+            <!-- Enhancement Potion Input -->
+            <div class="input-section" id="enhancementInput">
+                <h2 style="color: #8e2de2; margin-bottom: 20px;">✨ Enhancement Potion</h2>
+                
+                <div class="form-group">
+                    <label for="enhancementName">Potion Name:</label>
+                    <input type="text" id="enhancementName" placeholder="Enter potion name..." />
+                </div>
+                
+                <div class="form-group">
+                    <label for="enhancementAmount">Enhancement Amount (Ability Points):</label>
+                    <input type="number" id="enhancementAmount" placeholder="Enter enhancement amount..." min="1" />
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateEffect('enhancement')">🧪 Calculate Effect</button>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="potion-bottle">
+                    <div class="bottle-container">
+                        <svg class="bottle-svg" viewBox="0 0 200 250" id="potionBottle">
+                            <!-- Bottle shape -->
+                            <path d="M 80 30 L 80 50 L 60 70 L 60 200 Q 60 220 80 220 L 120 220 Q 140 220 140 200 L 140 70 L 120 50 L 120 30 Z" 
+                                  fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                            <!-- Cork -->
+                            <rect x="75" y="20" width="50" height="15" rx="5" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+                            <!-- Liquid -->
+                            <path class="potion-liquid" id="potionLiquid"
+                                  d="M 65 80 L 65 200 Q 65 215 80 215 L 120 215 Q 135 215 135 200 L 135 80 Z" 
+                                  fill="#ff4757" opacity="0.8"/>
+                            <!-- Shine effect -->
+                            <ellipse cx="85" cy="100" rx="15" ry="30" fill="white" opacity="0.3"/>
+                        </svg>
+                        <div class="sparkles">✨</div>
+                    </div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="potion-name" id="potionName">-</div>
+                    
+                    <div class="effect-box" id="effectText">
+                        Potion effect will appear here
+                    </div>
+                    
+                    <div class="potion-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Potion Type</div>
+                            <div class="stat-value" id="potionType" style="font-size: 1.5em;">-</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Effect Value</div>
+                            <div class="stat-value" id="effectValue">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="create-new-btn" onclick="reset()">🔄 Create New Potion</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentPotionType = null;
+        
+        // Create magical particles
+        function createParticles() {
+            const container = document.getElementById('particlesContainer');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 5 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+        
+        function selectPotionType(type) {
+            currentPotionType = type;
+            
+            // Update card selection
+            document.querySelectorAll('.potion-type-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.potion-type-card').classList.add('active');
+            
+            // Show appropriate input section
+            document.getElementById('healingInput').classList.remove('active');
+            document.getElementById('enhancementInput').classList.remove('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            
+            if (type === 'healing') {
+                document.getElementById('healingInput').classList.add('active');
+            } else {
+                document.getElementById('enhancementInput').classList.add('active');
+            }
+        }
+        
+        function loadPreset(type, name, amount) {
+            selectPotionType(type);
+            
+            // Small delay to ensure input section is visible
+            setTimeout(() => {
+                if (type === 'healing') {
+                    document.getElementById('healingName').value = name;
+                    document.getElementById('healingAmount').value = amount;
+                } else {
+                    document.getElementById('enhancementName').value = name;
+                    document.getElementById('enhancementAmount').value = amount;
+                }
+            }, 100);
+        }
+        
+        function calculateEffect(type) {
+            let name, amount, effectText, color;
+            
+            if (type === 'healing') {
+                name = document.getElementById('healingName').value.trim();
+                amount = parseInt(document.getElementById('healingAmount').value);
+                
+                if (!name || !amount || amount < 1) {
+                    alert('Please enter valid potion name and healing amount!');
+                    return;
+                }
+                
+                effectText = `${name} restores ${amount} health points.`;
+                color = '#ff4757'; // Red for healing
+                
+            } else {
+                name = document.getElementById('enhancementName').value.trim();
+                amount = parseInt(document.getElementById('enhancementAmount').value);
+                
+                if (!name || !amount || amount < 1) {
+                    alert('Please enter valid potion name and enhancement amount!');
+                    return;
+                }
+                
+                effectText = `${name} enhances abilities by ${amount} points.`;
+                color = '#5352ed'; // Purple for enhancement
+            }
+            
+            // Update results
+            document.getElementById('potionName').textContent = name;
+            document.getElementById('effectText').textContent = effectText;
+            document.getElementById('potionType').textContent = type === 'healing' ? '❤️ Healing' : '✨ Enhancement';
+            document.getElementById('effectValue').textContent = amount;
+            
+            // Update potion liquid color
+            document.getElementById('potionLiquid').setAttribute('fill', color);
+            
+            // Show results
+            document.getElementById('resultsSection').classList.add('active');
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Log to console (like TypeScript function)
+            console.log(`Potion: ${name}, Type: ${type}, Amount: ${amount}`);
+            console.log(`Effect: ${effectText}`);
+        }
+        
+        function reset() {
+            currentPotionType = null;
+            document.querySelectorAll('.potion-type-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById('healingInput').classList.remove('active');
+            document.getElementById('enhancementInput').classList.remove('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            
+            // Clear inputs
+            document.getElementById('healingName').value = '';
+            document.getElementById('healingAmount').value = '';
+            document.getElementById('enhancementName').value = '';
+            document.getElementById('enhancementAmount').value = '';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

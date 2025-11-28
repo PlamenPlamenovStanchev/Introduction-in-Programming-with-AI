@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reverseString() Function Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .code-block code {
+            color: #333;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+        
+        .step-by-step {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+            font-size: 1.1em;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        
+        .step-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .example-box {
+            background: #e8eaf6;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #c5cae9;
+        }
+        
+        .test-cases {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .test-case {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .test-case:last-child {
+            margin-bottom: 0;
+        }
+        
+        .test-input {
+            color: #d32f2f;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+        }
+        
+        .test-output {
+            color: #388e3c;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .diagram-box {
+            display: inline-block;
+            background: #e8eaf6;
+            padding: 20px 30px;
+            margin: 10px 5px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            position: relative;
+            min-width: 150px;
+        }
+        
+        .arrow {
+            display: inline-block;
+            color: #667eea;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        
+        .flow-diagram {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+        
+        .flow-step-num {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .flow-arrow {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.5em;
+            margin: 5px 0;
+        }
+        
+        .footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 reverseString() Function</h1>
+            <p>Visual Guide to String Reversal Logic</p>
+        </div>
+        
+        <div class="content">
+            <!-- Function Overview Section -->
+            <div class="section">
+                <h2>📋 Function Overview</h2>
+                <div class="code-block">
+                    <code>function reverseString(str: string): string {
+    const reversedStr = str.split('').reverse().join('');
+    const result = `The reversed string of "${str}" is: "${reversedStr}"`;
+    console.log(result);
+    return result;
+}</code>
+                </div>
+                <p style="margin-top: 15px; color: #555;">This function takes a string as input, reverses it, formats a message, logs it to the console, and returns the formatted result.</p>
+            </div>
+            
+            <!-- Logic Flow Section -->
+            <div class="section">
+                <h2>⚙️ Logic Flow</h2>
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-step-num">1</div>
+                        <div><strong>Input:</strong> Receive string parameter (e.g., "hello")</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-num">2</div>
+                        <div><strong>Split:</strong> Convert string to array using .split('')</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-num">3</div>
+                        <div><strong>Reverse:</strong> Reverse array order using .reverse()</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-num">4</div>
+                        <div><strong>Join:</strong> Convert array back to string using .join('')</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-num">5</div>
+                        <div><strong>Format:</strong> Create formatted message with original and reversed strings</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-num">6</div>
+                        <div><strong>Output:</strong> Log to console and return the result</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step-by-Step Breakdown Section -->
+            <div class="section">
+                <h2>🔍 Step-by-Step Breakdown</h2>
+                <div class="step-by-step">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">split('') - Convert String to Array</div>
+                            <div class="step-description">Splits the string into an array of individual characters</div>
+                            <div class="example-box">
+                                Input: "hello"<br>
+                                Result: ['h', 'e', 'l', 'l', 'o']
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">reverse() - Reverse Array Order</div>
+                            <div class="step-description">Reverses the order of elements in the array</div>
+                            <div class="example-box">
+                                Input: ['h', 'e', 'l', 'l', 'o']<br>
+                                Result: ['o', 'l', 'l', 'e', 'h']
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">join('') - Convert Array Back to String</div>
+                            <div class="step-description">Joins all array elements into a single string without separator</div>
+                            <div class="example-box">
+                                Input: ['o', 'l', 'l', 'e', 'h']<br>
+                                Result: "olleh"
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Format Message</div>
+                            <div class="step-description">Create a formatted string with the original and reversed strings</div>
+                            <div class="example-box">
+                                Template: `The reversed string of "${str}" is: "${reversedStr}"`<br>
+                                Result: The reversed string of "hello" is: "olleh"
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <div class="step-title">Console Log & Return</div>
+                            <div class="step-description">Print the formatted message to console and return the result</div>
+                            <div class="example-box">
+                                Output: The reversed string of "hello" is: "olleh"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Cases Section -->
+            <div class="section">
+                <h2>✅ Test Cases</h2>
+                <div class="test-cases">
+                    <div class="test-case">
+                        <div class="test-input">Input: reverseString("hello")</div>
+                        <div class="test-output">Output: The reversed string of "hello" is: "olleh"</div>
+                    </div>
+                    
+                    <div class="test-case">
+                        <div class="test-input">Input: reverseString("TypeScript")</div>
+                        <div class="test-output">Output: The reversed string of "TypeScript" is: "tpircSepyT"</div>
+                    </div>
+                    
+                    <div class="test-case">
+                        <div class="test-input">Input: reverseString("OpenAI")</div>
+                        <div class="test-output">Output: The reversed string of "OpenAI" is: "IAnepO"</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visual Transformation Section -->
+            <div class="section">
+                <h2>🎨 Visual Transformation Example</h2>
+                <p style="margin-bottom: 20px; color: #555;">Let's trace through "hello" step by step:</p>
+                
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #667eea;">Original String:</strong>
+                        <span style="font-family: 'Courier New'; font-size: 1.1em; margin-left: 10px;">h e l l o</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px;">
+                        <strong style="color: #667eea;">After split(''):</strong>
+                        <span style="font-family: 'Courier New'; font-size: 1.1em; margin-left: 10px;">['h', 'e', 'l', 'l', 'o']</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px;">
+                        <strong style="color: #667eea;">After reverse():</strong>
+                        <span style="font-family: 'Courier New'; font-size: 1.1em; margin-left: 10px;">['o', 'l', 'l', 'e', 'h']</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px;">
+                        <strong style="color: #667eea;">After join(''):</strong>
+                        <span style="font-family: 'Courier New'; font-size: 1.1em; margin-left: 10px;">o l l e h</span>
+                    </div>
+                    
+                    <div style="padding: 10px; background: white; border-radius: 5px; border: 2px solid #667eea;">
+                        <strong style="color: #667eea;">Final Result:</strong>
+                        <span style="font-family: 'Courier New'; font-size: 1.1em; margin-left: 10px;">The reversed string of "hello" is: "olleh"</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Methods Section -->
+            <div class="section">
+                <h2>🔑 Key Methods Used</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <strong style="color: #667eea;">split(separator)</strong>
+                        <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Splits a string into an array of substrings. Using '' splits into individual characters.</p>
+                    </div>
+                    
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <strong style="color: #667eea;">reverse()</strong>
+                        <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Reverses an array in-place. The first element becomes the last, and vice versa.</p>
+                    </div>
+                    
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <strong style="color: #667eea;">join(separator)</strong>
+                        <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Joins all array elements into a string. Using '' concatenates without separators.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>💡 TypeScript String Reversal Function Visualization | Created to understand the logic flow</p>
+        </div>
+    </div>
+</body>
+</html>
