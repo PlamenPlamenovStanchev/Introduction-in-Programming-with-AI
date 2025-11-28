@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falling Objects Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+        <div class="controls">
+            <button id="startBtn">Start</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="resumeBtn">Resume</button>
+            <button id="stopBtn">Stop</button>
+        </div>
+    </div>
+    <div class="instructions">
+        <h3>How to Play:</h3>
+        <p>Use <strong>← →</strong> arrow keys or <strong>A D</strong> keys to move the player</p>
+        <p>Avoid the falling objects to survive as long as possible!</p>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
