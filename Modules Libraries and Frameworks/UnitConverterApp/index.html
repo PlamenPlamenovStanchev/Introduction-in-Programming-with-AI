@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar with Tabs -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>⚙️ Unit Converter</h1>
+            </div>
+            <nav class="tabs">
+                <button class="tab-button active" data-tab="metric">
+                    <span class="icon">📏</span>
+                    <span class="label">Metric</span>
+                </button>
+                <button class="tab-button" data-tab="weight">
+                    <span class="icon">⚖️</span>
+                    <span class="label">Weight</span>
+                </button>
+                <button class="tab-button" data-tab="temperature">
+                    <span class="icon">🌡️</span>
+                    <span class="label">Temperature</span>
+                </button>
+            </nav>
+            <footer class="sidebar-footer">
+                <p>Version 1.0</p>
+            </footer>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <!-- Metric Converter Tab -->
+            <section class="tab-content active" id="metric-tab">
+                <h2>Metric/Length Converter</h2>
+                <p class="description">Convert between metric and imperial length units</p>
+                
+                <div class="converter-wrapper">
+                    <div class="input-group">
+                        <label for="metric-input">From:</label>
+                        <div class="input-row">
+                            <input type="number" id="metric-input" placeholder="Enter value" value="1">
+                            <select id="metric-from-unit">
+                                <option value="mm">Millimeters (mm)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="m" selected>Meters (m)</option>
+                                <option value="km">Kilometers (km)</option>
+                                <option value="inch">Inches (in)</option>
+                                <option value="foot">Feet (ft)</option>
+                                <option value="yard">Yards (yd)</option>
+                                <option value="mile">Miles (mi)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="swap-button">
+                        <button id="metric-swap" title="Swap units">⇅</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="metric-output">To:</label>
+                        <div class="input-row">
+                            <input type="number" id="metric-output" placeholder="Result" readonly>
+                            <select id="metric-to-unit">
+                                <option value="mm">Millimeters (mm)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="km">Kilometers (km)</option>
+                                <option value="inch">Inches (in)</option>
+                                <option value="foot" selected>Feet (ft)</option>
+                                <option value="yard">Yards (yd)</option>
+                                <option value="mile">Miles (mi)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-info" id="metric-result-info"></div>
+            </section>
+
+            <!-- Weight Converter Tab -->
+            <section class="tab-content" id="weight-tab">
+                <h2>Weight Converter</h2>
+                <p class="description">Convert between metric and imperial weight units</p>
+                
+                <div class="converter-wrapper">
+                    <div class="input-group">
+                        <label for="weight-input">From:</label>
+                        <div class="input-row">
+                            <input type="number" id="weight-input" placeholder="Enter value" value="1">
+                            <select id="weight-from-unit">
+                                <option value="mg">Milligrams (mg)</option>
+                                <option value="g">Grams (g)</option>
+                                <option value="kg" selected>Kilograms (kg)</option>
+                                <option value="t">Metric Tons (t)</option>
+                                <option value="oz">Ounces (oz)</option>
+                                <option value="lb">Pounds (lb)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="swap-button">
+                        <button id="weight-swap" title="Swap units">⇅</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="weight-output">To:</label>
+                        <div class="input-row">
+                            <input type="number" id="weight-output" placeholder="Result" readonly>
+                            <select id="weight-to-unit">
+                                <option value="mg">Milligrams (mg)</option>
+                                <option value="g">Grams (g)</option>
+                                <option value="kg">Kilograms (kg)</option>
+                                <option value="t">Metric Tons (t)</option>
+                                <option value="oz">Ounces (oz)</option>
+                                <option value="lb" selected>Pounds (lb)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-info" id="weight-result-info"></div>
+            </section>
+
+            <!-- Temperature Converter Tab -->
+            <section class="tab-content" id="temperature-tab">
+                <h2>Temperature Converter</h2>
+                <p class="description">Convert between Celsius, Fahrenheit, and Kelvin</p>
+                
+                <div class="converter-wrapper">
+                    <div class="input-group">
+                        <label for="temperature-input">From:</label>
+                        <div class="input-row">
+                            <input type="number" id="temperature-input" placeholder="Enter value" value="0">
+                            <select id="temperature-from-unit">
+                                <option value="cel" selected>Celsius (°C)</option>
+                                <option value="fah">Fahrenheit (°F)</option>
+                                <option value="kel">Kelvin (K)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="swap-button">
+                        <button id="temperature-swap" title="Swap units">⇅</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="temperature-output">To:</label>
+                        <div class="input-row">
+                            <input type="number" id="temperature-output" placeholder="Result" readonly>
+                            <select id="temperature-to-unit">
+                                <option value="cel">Celsius (°C)</option>
+                                <option value="fah" selected>Fahrenheit (°F)</option>
+                                <option value="kel">Kelvin (K)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-info" id="temperature-result-info"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app-web.js"></script>
+</body>
+</html>

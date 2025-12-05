@@ -1,0 +1,21 @@
+{
+  "name": "invoice-console-app",
+  "version": "1.0.0",
+  "description": "Console application to demonstrate invoice creation and editing",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "invoice",
+    "console",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "invoice-repo": "1.0.0"
+  }
+}

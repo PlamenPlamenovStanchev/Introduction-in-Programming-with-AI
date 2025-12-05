@@ -1,0 +1,43 @@
+{
+  "name": "invoice-repo",
+  "version": "1.0.0",
+  "description": "Library for invoice data types and logic to manage invoices",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules ../node_modules/jest/bin/jest.js"
+  },
+  "keywords": [
+    "invoice",
+    "library",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.3.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/invoice-types.js",
+      "types": "./dist/invoice-types.d.ts"
+    },
+    "./repo": {
+      "import": "./dist/invoice-repo.js",
+      "types": "./dist/invoice-repo.d.ts"
+    },
+    "./sample-data": {
+      "import": "./dist/invoice-repo-sample-data.js",
+      "types": "./dist/invoice-repo-sample-data.d.ts"
+    }
+  }
+}

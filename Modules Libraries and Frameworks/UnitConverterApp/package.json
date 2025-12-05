@@ -1,0 +1,21 @@
+{
+  "name": "unit-converter-app",
+  "version": "1.0.0",
+  "description": "A comprehensive unit converter library that converts metric, weight, and temperature units using ES6 modules",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "example": "node example.js",
+    "serve": "npx http-server -p 8000 -o"
+  },
+  "keywords": [
+    "unit-converter",
+    "metric",
+    "weight",
+    "temperature",
+    "conversion"
+  ],
+  "author": "",
+  "license": "MIT"
+}
